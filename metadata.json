@@ -1,0 +1,8 @@
+{
+  "name": "Remix VOLT - Groupes Électrogènes Domestiques Diesel",
+  "description": "Solution d\u0027énergie de secours pour particuliers et villas au Grand Tunis : vente, location, installation et support de groupes électrogènes diesel silencieux.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
