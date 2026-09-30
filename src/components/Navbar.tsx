@@ -28,13 +28,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
-      {/* Top emergency announcement bar for Grand Tunis */}
+      {/* Top emergency announcement bar for Greater Tunis */}
       <div className="bg-[#0D0D0D] text-white text-xs py-1.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
             <span className="font-medium text-gray-200">
-              Astreinte Grand Tunis : Intervention d&apos;urgence coupures STEG 24h/24 & 7j/7
+              Greater Tunis On-Call: 24/7 Emergency Dispatch for STEG Power Cuts
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 text-gray-300">
@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="text-gray-600">|</span>
             <span className="flex items-center gap-1 text-gray-400">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Garantie constructeur & ATS inclus
+              Manufacturer Warranty &amp; ATS Included
             </span>
           </div>
         </div>
@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block mb-1"></span>
                 </span>
                 <span className="block text-[10px] tracking-wider uppercase font-semibold text-gray-500 -mt-1">
-                  Énergie Domestique &amp; Secours
+                  Residential &amp; Backup Power
                 </span>
               </div>
             </button>
@@ -87,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-gray-600 hover:text-[#0D0D0D]'
               }`}
             >
-              Accueil
+              Home
               {currentTab === 'home' && !isAdmin && (
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
               )}
@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-gray-600 hover:text-[#0D0D0D]'
               }`}
             >
-              Vente Générateurs
+              Generator Sales
               {currentTab === 'sales' && !isAdmin && (
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
               )}
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-gray-600 hover:text-[#0D0D0D]'
               }`}
             >
-              Location &amp; Calculateur
+              Rental &amp; Calculator
               {currentTab === 'rental' && !isAdmin && (
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
               )}
@@ -129,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-gray-600 hover:text-[#0D0D0D]'
               }`}
             >
-              Support &amp; Suivi Tickets
+              Support &amp; Ticket Tracker
               {currentTab === 'support' && !isAdmin && (
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
               )}
@@ -142,21 +142,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-900 rounded-md border border-amber-300">
                   <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
-                  Mode Administrateur
+                  Admin Mode Active
                 </span>
                 <button
                   onClick={onExitAdmin}
                   className="text-xs text-gray-600 hover:text-red-600 font-medium px-2 py-1 border border-gray-300 rounded hover:bg-red-50 transition-colors"
                 >
-                  Quitter Admin
+                  Exit Admin
                 </button>
               </div>
             ) : (
               <button
                 onClick={onOpenAdminModal}
                 className="p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
-                title="Accès Espace Admin (PIN 1234)"
-                aria-label="Accès Administration"
+                title="Admin Portal Access (PIN 1234)"
+                aria-label="Admin Portal Access"
               >
                 <Lock className="w-4 h-4" />
               </button>
@@ -166,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNav('sales')}
               className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-amber-500 text-white hover:bg-amber-600 shadow-sm active:scale-97 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
             >
-              Obtenir un générateur
+              Get a Generator
             </button>
           </div>
 
@@ -194,7 +194,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            Accueil
+            Home
           </button>
           <button
             onClick={() => handleNav('sales')}
@@ -204,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            Vente Générateurs (7 à 28 kVA)
+            Generator Sales (7 to 28 kVA)
           </button>
           <button
             onClick={() => handleNav('rental')}
@@ -214,7 +214,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            Location &amp; Calculateur
+            Rental &amp; Calculator
           </button>
           <button
             onClick={() => handleNav('support')}
@@ -224,7 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-gray-700 hover:bg-gray-50'
             }`}
           >
-            Support &amp; Suivi Tickets
+            Support &amp; Ticket Tracker
           </button>
 
           <div className="pt-3 border-t border-gray-200 flex flex-col gap-2">
@@ -233,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center justify-center gap-2 py-2.5 rounded-lg border border-amber-400 bg-amber-50 text-amber-900 font-semibold text-sm"
             >
               <Phone className="w-4 h-4 text-amber-600" />
-              Appeler urgence : +216 71 888 999
+              Emergency Call: +216 71 888 999
             </a>
             <button
               onClick={() => {
@@ -243,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center justify-center gap-2 py-2 text-sm text-gray-600 hover:text-gray-900"
             >
               <Lock className="w-4 h-4" />
-              {isAdmin ? 'Espace Admin actif' : 'Connexion Admin (PIN 1234)'}
+              {isAdmin ? 'Admin Mode Active' : 'Admin Login (PIN 1234)'}
             </button>
           </div>
         </div>

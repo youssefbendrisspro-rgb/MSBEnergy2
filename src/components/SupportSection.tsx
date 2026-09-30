@@ -7,13 +7,9 @@ import {
   UploadCloud,
   X,
   Search,
-  ShieldAlert,
   Send,
-  User,
   Phone,
   Mail,
-  MapPin,
-  Image as ImageIcon,
   MessageSquare
 } from 'lucide-react';
 import { SupportTicket, TicketUrgency } from '../types/volt';
@@ -38,10 +34,10 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
   const [generatorModel, setGeneratorModel] = useState('VOLT VillaPower 15D');
   const [address, setAddress] = useState('');
   const [problemCategory, setProblemCategory] = useState<SupportTicket['problemCategory']>(
-    'Panne de démarrage'
+    'Starting Failure'
   );
   const [description, setDescription] = useState('');
-  const [urgency, setUrgency] = useState<TicketUrgency>('Urgent');
+  const [urgency, setUrgency] = useState<TicketUrgency>('High');
 
   // Photo state
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
@@ -76,7 +72,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
     } catch (err: unknown) {
       console.error(err);
       setPhotoError(
-        err instanceof Error ? err.message : 'Erreur lors de la compression de la photo.'
+        err instanceof Error ? err.message : 'Error during photo compression.'
       );
     } finally {
       setPhotoCompressing(false);
@@ -90,18 +86,18 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
   const validate = () => {
     const errors: { [key: string]: string } = {};
-    if (!clientName.trim()) errors.clientName = 'Le nom complet est obligatoire.';
-    if (!clientPhone.trim()) errors.clientPhone = 'Le numéro de téléphone est obligatoire.';
+    if (!clientName.trim()) errors.clientName = 'Full name is required.';
+    if (!clientPhone.trim()) errors.clientPhone = 'Phone number is required.';
     if (!clientEmail.trim()) {
-      errors.clientEmail = 'L\'adresse email est obligatoire.';
+      errors.clientEmail = 'Email address is required.';
     } else if (!/\S+@\S+\.\S+/.test(clientEmail)) {
-      errors.clientEmail = 'Adresse email non valide.';
+      errors.clientEmail = 'Invalid email address.';
     }
-    if (!address.trim()) errors.address = 'L\'adresse d\'intervention dans le Grand Tunis est obligatoire.';
+    if (!address.trim()) errors.address = 'Service address in Greater Tunis is required.';
     if (!description.trim()) {
-      errors.description = 'La description du problème est obligatoire.';
+      errors.description = 'Problem description is required.';
     } else if (description.trim().length < 20) {
-      errors.description = `Veuillez détailler davantage (au moins 20 caractères, actuellement ${description.trim().length}).`;
+      errors.description = `Please provide more details (at least 20 characters, currently ${description.trim().length}).`;
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -125,7 +121,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
         description: description.trim(),
         urgency,
         photoBase64: allowNoPhoto ? undefined : photoBase64 || undefined,
-        status: 'Ouvert',
+        status: 'Open',
         notes: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -148,10 +144,10 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
       console.error(err);
       if (err instanceof StorageQuotaError) {
         setQuotaWarning(
-          'La mémoire locale du navigateur est saturée à cause de la photo. Voulez-vous envoyer votre ticket sans la photo pour que nos techniciens puissent intervenir immédiatement ?'
+          'Browser local storage is full due to photo size. Would you like to submit your ticket without the photo so our technicians can dispatch immediately?'
         );
       } else {
-        alert('Une erreur est survenue lors de l\'enregistrement du ticket.');
+        alert('An error occurred while saving the support ticket.');
       }
     } finally {
       setIsSubmitting(false);
@@ -160,23 +156,25 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
   const getUrgencyBadge = (lvl: TicketUrgency) => {
     switch (lvl) {
+      case 'Emergency':
       case 'Urgence':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200">
             <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping" />
-            Urgence STEG (&lt; 2h)
+            STEG Emergency (&lt; 2h)
           </span>
         );
+      case 'High':
       case 'Urgent':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-200">
-            Urgent (&lt; 8h)
+            High Priority (&lt; 8h)
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
-            Normal (&lt; 48h)
+            Standard (&lt; 48h)
           </span>
         );
     }
@@ -184,34 +182,45 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
   const getStatusBadge = (status: SupportTicket['status']) => {
     switch (status) {
+      case 'Open':
       case 'Ouvert':
         return (
           <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-            Ouvert
+            Open
           </span>
         );
+      case 'Assigned':
       case 'Assigné':
         return (
           <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-100 text-blue-900 border border-blue-200">
-            Assigné
+            Assigned
           </span>
         );
+      case 'In Progress':
       case 'En cours':
         return (
           <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-100 text-indigo-900 border border-indigo-200">
-            En cours d&apos;intervention
+            In Progress
           </span>
         );
+      case 'Resolved':
       case 'Résolu':
         return (
           <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-900 border border-emerald-200">
-            Résolu
+            Resolved
           </span>
         );
+      case 'Closed':
       case 'Fermé':
         return (
           <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
-            Fermé
+            Closed
+          </span>
+        );
+      default:
+        return (
+          <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+            {status}
           </span>
         );
     }
@@ -223,18 +232,18 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-900 text-xs font-bold mb-3">
           <Wrench className="w-3.5 h-3.5 text-red-600" />
-          <span>Assistance Technique &amp; Astreinte 24/7 Grand Tunis</span>
+          <span>Technical Assistance &amp; 24/7 On-Call Greater Tunis</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D]">
-          Support Technique &amp; Dépannage
+          Technical Support &amp; Emergency Breakdown
         </h1>
         <p className="text-gray-600 text-base mt-2 max-w-3xl leading-relaxed">
-          Panne au démarrage, alerte surchauffe, inverseur ATS bloqué ou révision périodique.
-          Nos électromécaniciens interviennent chez vous avec pièces de rechange et outillage de diagnostic.
+          Starting failure, overheating alarm, stuck ATS switch, or routine maintenance.
+          Our electromechanical technicians arrive with specialized diagnostic tools and genuine replacement parts.
         </p>
       </div>
 
-      {/* Tabs: Créer un ticket vs Suivre mes tickets */}
+      {/* Tabs */}
       <div className="flex border-b border-gray-200 gap-4">
         <button
           onClick={() => setActiveTab('create')}
@@ -244,7 +253,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
               : 'text-gray-500 hover:text-[#0D0D0D]'
           }`}
         >
-          Déclarer un incident / Panne
+          Report an Incident / Breakdown
           {activeTab === 'create' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500 rounded-full" />
           )}
@@ -258,7 +267,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
               : 'text-gray-500 hover:text-[#0D0D0D]'
           }`}
         >
-          <span>Suivre mes tickets existants</span>
+          <span>Track Existing Tickets</span>
           {tickets.length > 0 && (
             <span className="text-[11px] font-bold px-2 py-0.2 rounded-full bg-gray-200 text-gray-800">
               {tickets.length}
@@ -280,34 +289,34 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#0D0D0D]">Ticket Créé avec Succès !</h3>
+                <h3 className="text-2xl font-bold text-[#0D0D0D]">Ticket Created Successfully!</h3>
                 <p className="text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
-                  Votre demande d&apos;assistance a bien été enregistrée dans la file d&apos;attente prioritaire de l&apos;astreinte Grand Tunis.
+                  Your support request has been queued in the Greater Tunis emergency dispatch priority queue.
                 </p>
 
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-left max-w-md mx-auto text-xs space-y-2">
                   <div className="flex justify-between items-center pb-2 border-b border-amber-200">
-                    <span className="text-gray-500">Numéro de Ticket Unique :</span>
+                    <span className="text-gray-500">Unique Ticket ID:</span>
                     <span className="font-mono font-extrabold text-sm text-amber-900 bg-amber-100 px-2 py-0.5 rounded">
                       {successTicket.id}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Niveau d&apos;urgence :</span>
+                    <span className="text-gray-500">Urgency Level:</span>
                     <span>{getUrgencyBadge(successTicket.urgency)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Délai d&apos;intervention estimé :</span>
+                    <span className="text-gray-500">Estimated Response Time:</span>
                     <span className="font-bold text-gray-900">
-                      {successTicket.urgency === 'Urgence'
-                        ? 'Moins de 2 heures'
-                        : successTicket.urgency === 'Urgent'
-                        ? 'Moins de 8 heures'
-                        : 'Sous 48 heures'}
+                      {successTicket.urgency === 'Emergency' || successTicket.urgency === 'Urgence'
+                        ? 'Under 2 hours'
+                        : successTicket.urgency === 'High' || successTicket.urgency === 'Urgent'
+                        ? 'Under 8 hours'
+                        : 'Within 48 hours'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Email notifié :</span>
+                    <span className="text-gray-500">Notification Email:</span>
                     <span className="font-semibold text-gray-800">{successTicket.clientEmail}</span>
                   </div>
                 </div>
@@ -322,13 +331,13 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                     }}
                     className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition-all"
                   >
-                    Voir l&apos;état de ce ticket
+                    View Status of This Ticket
                   </button>
                   <button
                     onClick={() => setSuccessTicket(null)}
                     className="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:text-black font-semibold text-sm transition-all"
                   >
-                    Créer un autre ticket
+                    Create Another Ticket
                   </button>
                 </div>
               </div>
@@ -341,9 +350,9 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                 className="space-y-6"
               >
                 <div>
-                  <h3 className="text-xl font-bold text-[#0D0D0D]">Formulaire de Déclaration de Panne</h3>
+                  <h3 className="text-xl font-bold text-[#0D0D0D]">Breakdown Incident Report</h3>
                   <p className="text-xs text-gray-500 mt-1">
-                    Tous les champs marqués d&apos;une astérisque (*) sont obligatoires pour mobiliser nos techniciens.
+                    All fields marked with an asterisk (*) are required to dispatch our technicians.
                   </p>
                 </div>
 
@@ -359,29 +368,29 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                         onClick={() => removePhoto()}
                         className="px-3 py-1 bg-white border border-gray-300 rounded font-medium text-gray-700 hover:bg-gray-50"
                       >
-                        Retirer la photo
+                        Remove Photo
                       </button>
                       <button
                         type="button"
                         onClick={() => handleSubmit(true)}
                         className="px-3 py-1 bg-amber-600 text-white rounded font-bold hover:bg-amber-700"
                       >
-                        Envoyer sans photo
+                        Send Without Photo
                       </button>
                     </div>
                   </div>
                 )}
 
                 <div className="space-y-4">
-                  {/* Coordonnées Client */}
+                  {/* Client Details */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Nom &amp; Prénom *
+                        Full Name *
                       </label>
                       <input
                         type="text"
-                        placeholder="Ex: Sami Riahi"
+                        placeholder="e.g. Sami Riahi"
                         value={clientName}
                         onChange={(e) => setClientName(e.target.value)}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -395,11 +404,11 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Téléphone (+216) *
+                        Phone Number (+216) *
                       </label>
                       <input
                         type="tel"
-                        placeholder="Ex: 98 765 432"
+                        placeholder="e.g. 98 765 432"
                         value={clientPhone}
                         onChange={(e) => setClientPhone(e.target.value)}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -413,11 +422,11 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Email pour le suivi *
+                        Email Address for Updates *
                       </label>
                       <input
                         type="email"
-                        placeholder="Ex: sami.riahi@gmail.com"
+                        placeholder="e.g. sami.riahi@gmail.com"
                         value={clientEmail}
                         onChange={(e) => setClientEmail(e.target.value)}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -430,15 +439,15 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                     </div>
                   </div>
 
-                  {/* Modèle & Catégorie */}
+                  {/* Model & Category */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Modèle de groupe électrogène
+                        Generator Model
                       </label>
                       <input
                         type="text"
-                        placeholder="Ex: VOLT VillaPower 15D ou autre"
+                        placeholder="e.g. VOLT VillaPower 15D or other"
                         value={generatorModel}
                         onChange={(e) => setGeneratorModel(e.target.value)}
                         className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -447,7 +456,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Catégorie de la panne
+                        Issue Category
                       </label>
                       <select
                         value={problemCategory}
@@ -456,25 +465,25 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                         }
                         className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
                       >
-                        <option value="Panne de démarrage">Panne de démarrage (Le moteur ne tourne pas)</option>
-                        <option value="Inverseur ATS défaillant">Inverseur ATS défaillant (Pas de bascule de courant)</option>
-                        <option value="Surchauffe / Alarme">Surchauffe / Alarme sonore sur le panneau</option>
-                        <option value="Fuite carburant ou huile">Fuite de gasoil ou suintement d&apos;huile</option>
-                        <option value="Bruit anormal">Vibrations ou claquements anormaux</option>
-                        <option value="Entretien & Révision">Vidange périodique &amp; Entretien 100h / 250h</option>
-                        <option value="Autre">Autre demande d&apos;assistance</option>
+                        <option value="Starting Failure">Starting Failure (Engine will not crank)</option>
+                        <option value="ATS Transfer Switch Issue">ATS Transfer Switch Issue (No automatic takeover)</option>
+                        <option value="Overheating / Alarm">Overheating / Audio alarm on panel</option>
+                        <option value="Fuel or Oil Leak">Fuel leak or oil seepage</option>
+                        <option value="Abnormal Noise">Abnormal noise or severe vibration</option>
+                        <option value="Maintenance & Service">Periodic Service (Oil drain, 100h / 250h inspection)</option>
+                        <option value="Other">Other technical inquiry</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* Adresse */}
+                  {/* Address */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Adresse complète d&apos;intervention (Grand Tunis) *
+                      Full On-Site Address (Greater Tunis) *
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: 22 Rue Sidi Dhrif, Sidi Bou Saïd"
+                      placeholder="e.g. 22 Rue Sidi Dhrif, Sidi Bou Said"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -486,100 +495,100 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                     )}
                   </div>
 
-                  {/* Urgence Selector */}
+                  {/* Urgency Selector */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                      Niveau d&apos;urgence d&apos;intervention
+                      Service Urgency Level
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <label
                         className={`flex flex-col p-3 rounded-xl border cursor-pointer transition-all ${
-                          urgency === 'Urgence'
+                          urgency === 'Emergency' || urgency === 'Urgence'
                             ? 'border-red-500 bg-red-50/70 ring-2 ring-red-400/20'
                             : 'border-gray-200 hover:bg-gray-50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-red-700">Urgence Critique</span>
+                          <span className="text-xs font-bold text-red-700">Critical Emergency</span>
                           <input
                             type="radio"
                             name="urgency"
-                            checked={urgency === 'Urgence'}
-                            onChange={() => setUrgency('Urgence')}
+                            checked={urgency === 'Emergency' || urgency === 'Urgence'}
+                            onChange={() => setUrgency('Emergency')}
                             className="text-red-600 focus:ring-red-500"
                           />
                         </div>
-                        <span className="text-xs font-extrabold text-red-900 mt-1">Délai &lt; 2h</span>
+                        <span className="text-xs font-extrabold text-red-900 mt-1">Arrival &lt; 2h</span>
                         <span className="text-[11px] text-red-600 mt-0.5">
-                          Coupure STEG en cours, denrées en péril ou matériel médical.
+                          Active STEG blackout, perishable supplies, or medical equipment at stake.
                         </span>
                       </label>
 
                       <label
                         className={`flex flex-col p-3 rounded-xl border cursor-pointer transition-all ${
-                          urgency === 'Urgent'
+                          urgency === 'High' || urgency === 'Urgent'
                             ? 'border-amber-500 bg-amber-50/70 ring-2 ring-amber-400/20'
                             : 'border-gray-200 hover:bg-gray-50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-800">Urgent</span>
+                          <span className="text-xs font-bold text-amber-800">High Priority</span>
                           <input
                             type="radio"
                             name="urgency"
-                            checked={urgency === 'Urgent'}
-                            onChange={() => setUrgency('Urgent')}
+                            checked={urgency === 'High' || urgency === 'Urgent'}
+                            onChange={() => setUrgency('High')}
                             className="text-amber-600 focus:ring-amber-500"
                           />
                         </div>
-                        <span className="text-xs font-extrabold text-amber-900 mt-1">Délai &lt; 8h</span>
+                        <span className="text-xs font-extrabold text-amber-900 mt-1">Arrival &lt; 8h</span>
                         <span className="text-[11px] text-amber-700 mt-0.5">
-                          Panne constatée en prévision de coupures programmées.
+                          Failure observed ahead of planned neighborhood outages.
                         </span>
                       </label>
 
                       <label
                         className={`flex flex-col p-3 rounded-xl border cursor-pointer transition-all ${
-                          urgency === 'Normal'
+                          urgency === 'Standard' || urgency === 'Normal'
                             ? 'border-gray-500 bg-gray-50 ring-2 ring-gray-400/20'
                             : 'border-gray-200 hover:bg-gray-50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-gray-700">Normal</span>
+                          <span className="text-xs font-bold text-gray-700">Standard</span>
                           <input
                             type="radio"
                             name="urgency"
-                            checked={urgency === 'Normal'}
-                            onChange={() => setUrgency('Normal')}
+                            checked={urgency === 'Standard' || urgency === 'Normal'}
+                            onChange={() => setUrgency('Standard')}
                             className="text-gray-600 focus:ring-gray-500"
                           />
                         </div>
-                        <span className="text-xs font-extrabold text-gray-900 mt-1">Délai &lt; 48h</span>
+                        <span className="text-xs font-extrabold text-gray-900 mt-1">Within 48h</span>
                         <span className="text-[11px] text-gray-500 mt-0.5">
-                          Entretien périodique, vidange, contrôle de batterie.
+                          Periodic servicing, oil drain, battery inspection.
                         </span>
                       </label>
                     </div>
                   </div>
 
-                  {/* Description with 20 chars min validation */}
+                  {/* Description */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="text-xs font-semibold text-gray-700">
-                        Description détaillée des symptômes *
+                        Detailed Description of Symptoms *
                       </label>
                       <span
                         className={`text-xs ${
                           description.trim().length >= 20 ? 'text-emerald-600 font-semibold' : 'text-gray-400'
                         }`}
                       >
-                        {description.trim().length}/20 car. min.
+                        {description.trim().length}/20 chars min.
                       </span>
                     </div>
                     <textarea
                       rows={4}
-                      placeholder="Décrivez précisément ce qui se passe (ex: le démarreur tente de lancer le moteur 3 fois puis l'alarme rouge clignote avec le code E04...)"
+                      placeholder="Describe what occurs (e.g. the starter cranks 3 times then the red alarm lamp flashes with error code E04...)"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -594,24 +603,24 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                   {/* Photo Upload with Client-Side Canvas Compression */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Photo du panneau de contrôle ou de la panne (Optionnel)
+                      Photo of Control Panel or Issue (Optional)
                     </label>
                     <p className="text-[11px] text-gray-500 mb-2">
-                      L&apos;image sera automatiquement compressée dans votre navigateur avant envoi.
+                      Image will be automatically compressed in your browser before upload.
                     </p>
 
                     {photoBase64 ? (
                       <div className="relative inline-block border border-gray-300 rounded-xl overflow-hidden shadow-sm">
                         <img
                           src={photoBase64}
-                          alt="Panne capturée"
+                          alt="Captured breakdown"
                           className="max-h-48 max-w-full object-cover rounded-xl"
                         />
                         <button
                           type="button"
                           onClick={removePhoto}
                           className="absolute top-2 right-2 p-1.5 rounded-full bg-red-600 text-white hover:bg-red-700 shadow"
-                          title="Supprimer la photo"
+                          title="Remove photo"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -620,9 +629,9 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                       <label className="border-2 border-dashed border-gray-300 hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-colors bg-gray-50 hover:bg-amber-50/30">
                         <UploadCloud className="w-6 h-6 text-gray-400 mb-1" />
                         <span className="text-xs font-semibold text-gray-700">
-                          {photoCompressing ? 'Optimisation et compression...' : 'Cliquer pour joindre une photo'}
+                          {photoCompressing ? 'Optimizing and compressing...' : 'Click to attach photo'}
                         </span>
-                        <span className="text-[10px] text-gray-400 mt-0.5">JPEG, PNG · Redimensionné à max 800px</span>
+                        <span className="text-[10px] text-gray-400 mt-0.5">JPEG, PNG · Resized to max 800px</span>
                         <input
                           type="file"
                           accept="image/*"
@@ -645,7 +654,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                     className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md active:scale-97 transition-all disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isSubmitting ? 'Transmission...' : 'Soumettre le ticket'}</span>
+                    <span>{isSubmitting ? 'Submitting...' : 'Submit Support Ticket'}</span>
                   </button>
                 </div>
               </form>
@@ -657,27 +666,27 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
               <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
                 <Clock className="w-4 h-4 text-amber-600" />
-                <span>Engagements Délais VOLT</span>
+                <span>VOLT Service Commitments</span>
               </h4>
               <ul className="text-xs space-y-3 text-gray-600">
                 <li className="flex items-start gap-2.5">
                   <span className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
                   <div>
-                    <strong className="text-gray-900">Urgence &lt; 2 heures</strong> : Technicien dépêché immédiatement
-                    pour relancer le système d&apos;alimentation de secours pendant la coupure.
+                    <strong className="text-gray-900">Emergency &lt; 2 hours</strong>: Technician dispatched immediately
+                    to restore your backup system during active power cuts.
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
                   <div>
-                    <strong className="text-gray-900">Urgent &lt; 8 heures</strong> : Prise en charge dans la demi-journée.
+                    <strong className="text-gray-900">High Priority &lt; 8 hours</strong>: Handled within half a day.
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-2 h-2 rounded-full bg-gray-400 mt-1.5 shrink-0" />
                   <div>
-                    <strong className="text-gray-900">Normal &lt; 48 heures</strong> : Planification d&apos;entretien périodique
-                    ou visite de contrôle.
+                    <strong className="text-gray-900">Standard &lt; 48 hours</strong>: Scheduled preventive maintenance
+                    or routine diagnostics.
                   </div>
                 </li>
               </ul>
@@ -686,11 +695,11 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
             <div className="bg-[#0D0D0D] text-white p-6 rounded-2xl shadow-sm space-y-3">
               <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
                 <Phone className="w-4 h-4" />
-                <span>Ligne Téléphonique Directe</span>
+                <span>Direct Hotline</span>
               </div>
               <p className="text-xs text-gray-300">
-                En cas d&apos;incendie, odeur suspecte ou danger immédiat, coupez l&apos;interrupteur d&apos;arrêt d&apos;urgence
-                du groupe et contactez directement l&apos;astreinte :
+                In case of fire, suspicious odor, or immediate hazard, turn off the emergency stop button on the unit
+                and call on-call dispatch directly:
               </p>
               <a
                 href="tel:+21671888999"
@@ -707,9 +716,9 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
       {activeTab === 'lookup' && (
         <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
           <div className="max-w-xl">
-            <h3 className="text-xl font-bold text-[#0D0D0D]">Recherche de vos tickets d&apos;assistance</h3>
+            <h3 className="text-xl font-bold text-[#0D0D0D]">Track Your Support Tickets</h3>
             <p className="text-xs text-gray-500 mt-1">
-              Saisissez l&apos;adresse email utilisée lors de la déclaration de votre panne pour afficher tous vos dossiers.
+              Enter the email address used when filing your ticket to retrieve all your service records.
             </p>
 
             <form
@@ -724,7 +733,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                 <input
                   type="email"
                   required
-                  placeholder="Ex: hedi.mansour@gmail.com"
+                  placeholder="e.g. hedi.mansour@gmail.com"
                   value={lookupEmail}
                   onChange={(e) => {
                     setLookupEmail(e.target.value);
@@ -737,7 +746,7 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                 type="submit"
                 className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-sm transition-all"
               >
-                Rechercher
+                Search
               </button>
             </form>
           </div>
@@ -747,16 +756,16 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
             <div className="pt-6 border-t border-gray-200 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-gray-500">
-                  {matchingTickets.length} ticket(s) trouvé(s) pour &quot;{lookupEmail}&quot;
+                  {matchingTickets.length} ticket(s) found for &quot;{lookupEmail}&quot;
                 </span>
               </div>
 
               {matchingTickets.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200 p-6 space-y-2">
                   <Search className="w-8 h-8 text-gray-400 mx-auto" />
-                  <p className="text-sm font-semibold text-gray-700">Aucun ticket associé à cette adresse</p>
+                  <p className="text-sm font-semibold text-gray-700">No tickets found for this email address</p>
                   <p className="text-xs text-gray-500">
-                    Vérifiez l&apos;orthographe de votre email ou créez un nouveau ticket dans l&apos;onglet ci-dessus.
+                    Check your email spelling or submit a new ticket in the tab above.
                   </p>
                 </div>
               ) : (
@@ -772,9 +781,9 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                             {t.id}
                           </span>
                           <span className="text-xs text-gray-400">
-                            {new Date(t.createdAt).toLocaleDateString('fr-FR', {
+                            {new Date(t.createdAt).toLocaleDateString('en-US', {
                               day: '2-digit',
-                              month: 'long',
+                              month: 'short',
                               year: 'numeric',
                               hour: '2-digit',
                               minute: '2-digit'
@@ -789,32 +798,32 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-gray-400 block">Modèle :</span>
+                          <span className="text-gray-400 block">Model:</span>
                           <span className="font-semibold text-gray-800">{t.generatorModel}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">Problème déclaré :</span>
+                          <span className="text-gray-400 block">Reported Issue:</span>
                           <span className="font-semibold text-gray-800">{t.problemCategory}</span>
                         </div>
                         <div className="sm:col-span-2">
-                          <span className="text-gray-400 block">Adresse :</span>
+                          <span className="text-gray-400 block">Address:</span>
                           <span className="text-gray-700">{t.address}</span>
                         </div>
                       </div>
 
                       <div className="bg-white p-3.5 rounded-xl border border-gray-200 text-xs text-gray-700 leading-relaxed">
-                        <div className="font-semibold text-gray-900 mb-1">Description des faits :</div>
+                        <div className="font-semibold text-gray-900 mb-1">Description:</div>
                         {t.description}
                       </div>
 
                       {t.photoBase64 && (
                         <div>
                           <span className="text-xs font-semibold text-gray-500 block mb-1">
-                            Photo transmise :
+                            Attached Photo:
                           </span>
                           <img
                             src={t.photoBase64}
-                            alt="Photo incident"
+                            alt="Incident attachment"
                             className="max-h-36 rounded-lg border border-gray-200 shadow-sm"
                           />
                         </div>
@@ -823,15 +832,15 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                       {/* Technician assignment and timeline notes */}
                       <div className="pt-3 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                         <div>
-                          <span className="text-gray-500">Technicien assigné : </span>
+                          <span className="text-gray-500">Assigned Technician: </span>
                           <span className="font-bold text-gray-900">
-                            {t.technician || 'En cours d\'affectation par le régulateur'}
+                            {t.technician || 'Pending dispatcher assignment'}
                           </span>
                         </div>
 
                         {t.notes && t.notes.length > 0 && (
                           <div className="text-amber-700 font-semibold">
-                            {t.notes.length} note(s) d&apos;intervention ajoutée(s)
+                            {t.notes.length} service note(s) recorded
                           </div>
                         )}
                       </div>
@@ -841,13 +850,13 @@ export const SupportSection: React.FC<SupportSectionProps> = ({
                         <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-2 text-xs">
                           <div className="font-bold text-amber-900 flex items-center gap-1.5">
                             <MessageSquare className="w-3.5 h-3.5 text-amber-700" />
-                            <span>Journal des techniciens VOLT :</span>
+                            <span>VOLT Technician Service Log:</span>
                           </div>
                           {t.notes.map((note) => (
                             <div key={note.id} className="text-gray-700 pl-2 border-l-2 border-amber-300">
                               <span className="font-semibold text-gray-900">{note.author}</span>{' '}
                               <span className="text-gray-400 text-[10px]">
-                                ({new Date(note.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}) :
+                                ({new Date(note.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}) :
                               </span>{' '}
                               {note.text}
                             </div>

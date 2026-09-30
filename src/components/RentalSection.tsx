@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   Calculator,
   Truck,
-  Shield,
   ArrowRight,
   X,
   Send,
@@ -75,17 +74,17 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
   // Duration in days calculation with date validation
   const { durationDays, calculationError } = useMemo(() => {
     if (!startDate || !endDate) {
-      return { durationDays: 0, calculationError: 'Veuillez sélectionner les deux dates.' };
+      return { durationDays: 0, calculationError: 'Please select both dates.' };
     }
     const start = new Date(startDate);
     const end = new Date(endDate);
 
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      return { durationDays: 0, calculationError: 'Date invalide.' };
+      return { durationDays: 0, calculationError: 'Invalid date.' };
     }
 
     if (start < new Date(todayStr)) {
-      return { durationDays: 0, calculationError: 'La date de début ne peut pas être dans le passé.' };
+      return { durationDays: 0, calculationError: 'Start date cannot be in the past.' };
     }
 
     const diffMs = end.getTime() - start.getTime();
@@ -94,14 +93,14 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
     if (days <= 0) {
       return {
         durationDays: 0,
-        calculationError: 'La date de fin doit être postérieure à la date de début.'
+        calculationError: 'Return date must be after the start date.'
       };
     }
 
     return { durationDays: days, calculationError: null };
   }, [startDate, endDate, todayStr]);
 
-  // Pricing calculation according to brief formula:
+  // Pricing calculation according to formula:
   // If < 7 days: dailyRate * duration
   // If >= 7 days: weeklyRate * fullWeeks + dailyRate * remainingDays
   const { baseRentalPrice, fullWeeks, remainingDays, extrasTotal, finalTotalPrice } = useMemo(() => {
@@ -129,9 +128,8 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
     }
 
     let extras = 0;
-    if (includeAtsCable) extras += 50; // Kit raccordement tableau express
-    if (includeFuelTank) extras += 80; // Plein de départ gasoil 50
-
+    if (includeAtsCable) extras += 50; // Rapid transfer switch and cabling kit
+    if (includeFuelTank) extras += 80; // Full initial diesel tank
     return {
       baseRentalPrice: base,
       fullWeeks: weeks,
@@ -151,19 +149,19 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
   const validateBookingForm = () => {
     const errors: { [key: string]: string } = {};
-    if (!clientForm.clientName.trim()) errors.clientName = 'Le nom est obligatoire.';
+    if (!clientForm.clientName.trim()) errors.clientName = 'Full name is required.';
     if (!clientForm.clientPhone.trim()) {
-      errors.clientPhone = 'Le numéro de téléphone est obligatoire.';
+      errors.clientPhone = 'Phone number is required.';
     } else if (clientForm.clientPhone.trim().length < 8) {
-      errors.clientPhone = 'Numéro de téléphone incomplet.';
+      errors.clientPhone = 'Incomplete phone number.';
     }
     if (!clientForm.clientEmail.trim()) {
-      errors.clientEmail = 'L\'adresse email est obligatoire.';
+      errors.clientEmail = 'Email address is required.';
     } else if (!/\S+@\S+\.\S+/.test(clientForm.clientEmail)) {
-      errors.clientEmail = 'Format email invalide.';
+      errors.clientEmail = 'Invalid email format.';
     }
     if (!clientForm.deliveryAddress.trim()) {
-      errors.deliveryAddress = 'L\'adresse de livraison dans le Grand Tunis est obligatoire.';
+      errors.deliveryAddress = 'Delivery address in Greater Tunis is required.';
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -194,7 +192,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
         deliveryAddress: clientForm.deliveryAddress.trim(),
         notes: clientForm.notes.trim(),
         createdAt: new Date().toISOString(),
-        status: 'En attente'
+        status: 'Pending'
       };
 
       const existingRequests = StorageService.getRentalRequests();
@@ -204,7 +202,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
       onRentalSuccess(newRequest);
     } catch (err) {
       console.error(err);
-      alert('Une erreur est survenue lors de l\'enregistrement de votre réservation.');
+      alert('An error occurred while saving your rental booking.');
     } finally {
       setIsSubmitting(false);
     }
@@ -216,14 +214,14 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-3">
           <Truck className="w-3.5 h-3.5 text-amber-600" />
-          <span>Livraison Express sous 24h Grand Tunis</span>
+          <span>Express Delivery Within 24h Across Greater Tunis</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D]">
-          Location de Groupes Diesel Résidentiels
+          Residential Diesel Generator Rental
         </h1>
         <p className="text-gray-600 text-base mt-2 max-w-3xl leading-relaxed">
-          Pour faire face à une coupure prolongée, alimenter une réception dans votre jardin ou sécuriser des travaux.
-          Nos unités de location sont insonorisées, montées sur châssis mobile et livrées avec câbles de raccordement.
+          Cope with prolonged grid outages, power outdoor private events, or secure home renovation work.
+          Our rental fleet is whisper-quiet, mounted on mobile rolling chassis, and supplied with heavy-duty connection cables.
         </p>
       </div>
 
@@ -260,7 +258,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                         : 'bg-red-50 text-red-800 border-red-200'
                     }`}
                   >
-                    {unit.available ? 'Disponible de suite' : 'En location'}
+                    {unit.available ? 'Available Immediately' : 'Currently Rented'}
                   </span>
                 </div>
                 <div className="absolute bottom-3 right-3">
@@ -286,13 +284,13 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                   {/* Tarifs */}
                   <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100 text-center">
                     <div>
-                      <span className="text-[11px] text-gray-400 block">Tarif Jour</span>
+                      <span className="text-[11px] text-gray-400 block">Daily Rate</span>
                       <span className="text-lg font-extrabold text-[#0D0D0D]">
                         {unit.dailyRateTnd} <span className="text-xs font-normal text-gray-500">TND</span>
                       </span>
                     </div>
                     <div className="border-l border-gray-200">
-                      <span className="text-[11px] text-gray-400 block">Tarif Semaine</span>
+                      <span className="text-[11px] text-gray-400 block">Weekly Rate</span>
                       <span className="text-lg font-extrabold text-amber-600">
                         {unit.weeklyRateTnd} <span className="text-xs font-normal text-gray-500">TND</span>
                       </span>
@@ -307,7 +305,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
                     }`}
                   >
-                    <span>{isSelected ? '✓ Sélectionné pour le calcul' : 'Sélectionner cette unité'}</span>
+                    <span>{isSelected ? '✓ Selected for calculation' : 'Select this unit'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -327,15 +325,15 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">
                 <Calculator className="w-4 h-4" />
-                <span>Simulateur Officiel VOLT</span>
+                <span>Official VOLT Simulator</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0D0D0D]">
-                Calculateur de Tarif de Location
+                Rental Rate Calculator
               </h2>
             </div>
             <div className="flex items-center gap-2 text-xs text-gray-500 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">
               <Info className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>Remise dégressive automatique appliquée pour 7 jours et plus</span>
+              <span>Automatic discounted weekly package applied for 7 days or more</span>
             </div>
           </div>
 
@@ -345,7 +343,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
               {/* Unit selection dropdown */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                  1. Choisir le groupe diesel
+                  1. Choose diesel generator
                 </label>
                 <select
                   value={selectedUnitId}
@@ -354,7 +352,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 >
                   {rentalUnits.map((u) => (
                     <option key={u.id} value={u.id}>
-                      {u.name} — {u.kva} kVA ({u.dailyRateTnd} TND/j · {u.weeklyRateTnd} TND/sem)
+                      {u.name} — {u.kva} kVA ({u.dailyRateTnd} TND/day · {u.weeklyRateTnd} TND/week)
                     </option>
                   ))}
                 </select>
@@ -364,7 +362,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    2. Date de début
+                    2. Start Date
                   </label>
                   <div className="relative">
                     <input
@@ -379,7 +377,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                    3. Date de restitution
+                    3. Return Date
                   </label>
                   <div className="relative">
                     <input
@@ -402,7 +400,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
               {/* Options & Services additionnels */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-                  4. Options de raccordement &amp; Carburant
+                  4. Connection Options &amp; Fuel Service
                 </label>
                 <div className="space-y-2">
                   <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors">
@@ -414,10 +412,10 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                     />
                     <div className="flex-1 text-xs">
                       <span className="font-semibold text-gray-800 block">
-                        Câbles de liaison 25m &amp; Coffret d&apos;inversion rapide (+50 TND)
+                        25m Power Cabling &amp; Rapid Transfer Switch Kit (+50 TND)
                       </span>
                       <span className="text-gray-500">
-                        Permet de connecter le groupe au tableau de la villa sans risque de retour réseau.
+                        Connects generator to your villa main panel safely with no risk of back-feeding the grid.
                       </span>
                     </div>
                   </label>
@@ -431,10 +429,10 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                     />
                     <div className="flex-1 text-xs">
                       <span className="font-semibold text-gray-800 block">
-                        Plein complet de Gasoil 50 à la livraison (+80 TND)
+                        Full Tank of Gasoil 50 at Delivery (+80 TND)
                       </span>
                       <span className="text-gray-500">
-                        Groupe livré réservoir plein, prêt à démarrer immédiatement.
+                        Generator delivered with a full fuel tank, ready for immediate startup.
                       </span>
                     </div>
                   </label>
@@ -445,19 +443,19 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
             {/* Right Live Calculation Summary Box */}
             <div className="lg:col-span-5 bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-5">
               <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">
-                Récapitulatif en Direct
+                Live Price Summary
               </h3>
 
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between pb-2 border-b border-gray-200">
-                  <span className="text-gray-500">Modèle sélectionné :</span>
+                  <span className="text-gray-500">Selected Model:</span>
                   <span className="font-bold text-gray-900 text-right">{currentUnit?.name}</span>
                 </div>
 
                 <div className="flex justify-between pb-2 border-b border-gray-200">
-                  <span className="text-gray-500">Durée calculée :</span>
+                  <span className="text-gray-500">Calculated Duration:</span>
                   <span className="font-bold text-gray-900 text-right">
-                    {durationDays > 0 ? `${durationDays} jour(s)` : '—'}
+                    {durationDays > 0 ? `${durationDays} day(s)` : '—'}
                   </span>
                 </div>
 
@@ -465,27 +463,27 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 {durationDays > 0 && (
                   <div className="p-3 rounded-xl bg-white border border-gray-200 space-y-1.5 text-gray-600">
                     <div className="text-[11px] font-semibold text-amber-800">
-                      Règle tarifaire appliquée :
+                      Applied pricing formula:
                     </div>
                     {durationDays < 7 ? (
                       <div className="text-[11px]">
-                        {durationDays} jour(s) × {currentUnit?.dailyRateTnd} TND/jour ={' '}
+                        {durationDays} day(s) × {currentUnit?.dailyRateTnd} TND/day ={' '}
                         <strong>{baseRentalPrice} TND</strong>
                       </div>
                     ) : (
                       <div className="text-[11px] space-y-1">
                         <div>
-                          • {fullWeeks} semaine(s) complète(s) × {currentUnit?.weeklyRateTnd} TND ={' '}
+                          • {fullWeeks} full week(s) × {currentUnit?.weeklyRateTnd} TND ={' '}
                           <strong>{fullWeeks * (currentUnit?.weeklyRateTnd || 0)} TND</strong>
                         </div>
                         {remainingDays > 0 && (
                           <div>
-                            • + {remainingDays} jour(s) supp. × {currentUnit?.dailyRateTnd} TND ={' '}
+                            • + {remainingDays} extra day(s) × {currentUnit?.dailyRateTnd} TND ={' '}
                             <strong>{remainingDays * (currentUnit?.dailyRateTnd || 0)} TND</strong>
                           </div>
                         )}
                         <div className="text-emerald-700 font-semibold pt-1">
-                          Économie grâce au forfait semaine !
+                          Savings from weekly discount package applied!
                         </div>
                       </div>
                     )}
@@ -494,7 +492,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
                 {extrasTotal > 0 && (
                   <div className="flex justify-between pb-2 border-b border-gray-200">
-                    <span className="text-gray-500">Options sélectionnées :</span>
+                    <span className="text-gray-500">Selected Options:</span>
                     <span className="font-semibold text-gray-900">+{extrasTotal} TND</span>
                   </div>
                 )}
@@ -503,14 +501,14 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
               {/* Total display */}
               <div className="pt-3 border-t border-gray-300">
                 <div className="flex items-baseline justify-between">
-                  <span className="text-xs uppercase font-bold text-gray-500">Total TTC Estimé</span>
+                  <span className="text-xs uppercase font-bold text-gray-500">Estimated Total (incl. VAT)</span>
                   <div className="text-3xl font-black text-amber-600">
-                    {finalTotalPrice.toLocaleString('fr-TN')}{' '}
+                    {finalTotalPrice.toLocaleString('en-US')}{' '}
                     <span className="text-sm font-semibold text-gray-500">TND</span>
                   </div>
                 </div>
                 <p className="text-[11px] text-gray-400 mt-1">
-                  Livraison et reprise sur site Grand Tunis incluses.
+                  On-site delivery and retrieval across Greater Tunis included.
                 </p>
               </div>
 
@@ -524,7 +522,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 }}
                 className="w-full py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md active:scale-97 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
               >
-                <span>Demander cette location</span>
+                <span>Request This Rental</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -546,7 +544,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 setSubmittedBooking(null);
               }}
               className="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-              aria-label="Fermer"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
@@ -556,30 +554,30 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#0D0D0D]">Réservation de Location Validée !</h3>
+                <h3 className="text-2xl font-bold text-[#0D0D0D]">Rental Booking Confirmed!</h3>
                 <p className="text-sm text-gray-600 max-w-sm mx-auto leading-relaxed">
-                  Votre demande pour le <strong>{submittedBooking.unitName}</strong> a bien été transmise.
-                  Notre service logistique vous contacte sous 2 heures pour confirmer l&apos;heure de dépose.
+                  Your reservation request for the <strong>{submittedBooking.unitName}</strong> has been received.
+                  Our logistics team will contact you within 2 hours to confirm your delivery schedule.
                 </p>
 
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left text-xs space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Numéro de réservation :</span>
+                    <span className="text-gray-500">Booking Reference:</span>
                     <span className="font-mono font-bold text-amber-800">{submittedBooking.id}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Dates :</span>
+                    <span className="text-gray-500">Rental Period:</span>
                     <span className="font-semibold text-gray-800">
-                      Du {submittedBooking.startDate} au {submittedBooking.endDate} ({submittedBooking.durationDays}j)
+                      {submittedBooking.startDate} to {submittedBooking.endDate} ({submittedBooking.durationDays} days)
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Total à régler à la livraison :</span>
+                    <span className="text-gray-500">Total payable upon delivery:</span>
                     <span className="font-bold text-amber-700">{submittedBooking.totalPriceTnd} TND</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Engagement de livraison :</span>
-                    <span className="font-semibold text-emerald-700">Délai garanti &lt; 24h</span>
+                    <span className="text-gray-500">Delivery Commitment:</span>
+                    <span className="font-semibold text-emerald-700">Guaranteed within 24h</span>
                   </div>
                 </div>
 
@@ -591,7 +589,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                     }}
                     className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm transition-all"
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </div>
@@ -599,13 +597,13 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
               <form onSubmit={handleBookingSubmit} className="space-y-5">
                 <div>
                   <span className="text-xs uppercase tracking-wider font-bold text-amber-600">
-                    Finaliser la demande de location
+                    Complete Rental Booking
                   </span>
                   <h3 className="text-xl font-bold text-[#0D0D0D]">
-                    {currentUnit?.name} ({durationDays} jours)
+                    {currentUnit?.name} ({durationDays} days)
                   </h3>
                   <div className="mt-1 text-xs text-gray-500 flex items-center gap-2">
-                    <span>Du {startDate} au {endDate}</span>
+                    <span>{startDate} to {endDate}</span>
                     <span>·</span>
                     <span className="font-bold text-amber-600">{finalTotalPrice} TND</span>
                   </div>
@@ -614,11 +612,11 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Nom complet *
+                      Full Name *
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Tarak Ghrab"
+                      placeholder="e.g. Tarak Ghrab"
                       value={clientForm.clientName}
                       onChange={(e) => setClientForm({ ...clientForm, clientName: e.target.value })}
                       className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -633,11 +631,11 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Téléphone (+216) *
+                        Phone Number (+216) *
                       </label>
                       <input
                         type="tel"
-                        placeholder="Ex: 55 123 456"
+                        placeholder="e.g. 55 123 456"
                         value={clientForm.clientPhone}
                         onChange={(e) => setClientForm({ ...clientForm, clientPhone: e.target.value })}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -651,11 +649,11 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Adresse Email *
+                        Email Address *
                       </label>
                       <input
                         type="email"
-                        placeholder="Ex: tarak@topnet.tn"
+                        placeholder="e.g. tarak@topnet.tn"
                         value={clientForm.clientEmail}
                         onChange={(e) => setClientForm({ ...clientForm, clientEmail: e.target.value })}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -670,11 +668,11 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Adresse de livraison précise (Grand Tunis) *
+                      Delivery Address (Greater Tunis) *
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Villa 14, Rue de l'Olivier, Gammarth Supérieur"
+                      placeholder="e.g. Villa 14, Rue de l'Olivier, Gammarth Supérieur"
                       value={clientForm.deliveryAddress}
                       onChange={(e) => setClientForm({ ...clientForm, deliveryAddress: e.target.value })}
                       className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -688,11 +686,11 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Instructions particulières pour le chauffeur (Optionnel)
+                      Specific driver directions or instructions (Optional)
                     </label>
                     <textarea
                       rows={2}
-                      placeholder="Ex: Portail blanc coulissant, sonner à l'interphone..."
+                      placeholder="e.g. White sliding gate, ring the intercom..."
                       value={clientForm.notes}
                       onChange={(e) => setClientForm({ ...clientForm, notes: e.target.value })}
                       className="w-full px-3.5 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -706,7 +704,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                     onClick={() => setIsModalOpen(false)}
                     className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-black"
                   >
-                    Annuler
+                    Cancel
                   </button>
                   <button
                     type="submit"
@@ -714,7 +712,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({
                     className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md active:scale-97 transition-all disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isSubmitting ? 'Enregistrement...' : 'Confirmer la réservation'}</span>
+                    <span>{isSubmitting ? 'Registering...' : 'Confirm Reservation'}</span>
                   </button>
                 </div>
               </form>

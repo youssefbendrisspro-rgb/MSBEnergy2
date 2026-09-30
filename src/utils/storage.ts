@@ -25,7 +25,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 export class StorageQuotaError extends Error {
-  constructor(message = 'Espace de stockage local saturé.') {
+  constructor(message = 'Local storage space is full.') {
     super(message);
     this.name = 'StorageQuotaError';
   }
@@ -37,7 +37,7 @@ function safeGet<T>(key: string, fallback: T): T {
     if (!raw) return fallback;
     return JSON.parse(raw) as T;
   } catch (err) {
-    console.warn(`Erreur lors de la lecture de ${key}, utilisation des données par défaut.`, err);
+    console.warn(`Error reading ${key}, using default data.`, err);
     return fallback;
   }
 }
@@ -48,7 +48,7 @@ function safeSet<T>(key: string, value: T): boolean {
     localStorage.setItem(key, serialized);
     return true;
   } catch (err: unknown) {
-    console.error(`Erreur d'écriture dans localStorage pour la clé ${key}:`, err);
+    console.error(`Error writing to localStorage for key ${key}:`, err);
     // Detect quota exceeded error
     const isQuota =
       err instanceof DOMException &&
@@ -58,7 +58,7 @@ function safeSet<T>(key: string, value: T): boolean {
         err.name === 'NS_ERROR_DOM_QUOTA_REACHED');
     if (isQuota) {
       throw new StorageQuotaError(
-        'La mémoire locale du navigateur est saturée. Veuillez réduire la taille des photos jointes ou purger les anciens tickets.'
+        'Browser local storage is full. Please reduce the size of attached photos or clear previous tickets.'
       );
     }
     throw err;

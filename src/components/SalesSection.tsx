@@ -5,13 +5,11 @@ import {
   CheckCircle2,
   Volume2,
   Zap,
-  Shield,
   Clock,
   Sparkles,
   X,
   Send,
-  Fuel,
-  Ruler
+  Fuel
 } from 'lucide-react';
 import { Generator, HabitationType, PurchaseRequest } from '../types/volt';
 import { StorageService } from '../utils/storage';
@@ -62,7 +60,11 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
       gen.engine.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory =
-      categoryFilter === 'all' || gen.category === categoryFilter;
+      categoryFilter === 'all' ||
+      gen.category === categoryFilter ||
+      (categoryFilter === 'Compact Home' && (gen.category === 'Compact Home' || gen.category === 'Domestique Compact')) ||
+      (categoryFilter === 'Residential Villa' && (gen.category === 'Residential Villa' || gen.category === 'Résidentiel Villa')) ||
+      (categoryFilter === 'Estate & Large Duplex' && (gen.category === 'Estate & Large Duplex' || gen.category === 'Grand Domaine & Duplex'));
 
     const matchesKva =
       kvaFilter === 'all' ||
@@ -75,16 +77,16 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
 
   const validatePurchaseForm = () => {
     const errors: { [key: string]: string } = {};
-    if (!formData.clientName.trim()) errors.clientName = 'Le nom complet est obligatoire.';
+    if (!formData.clientName.trim()) errors.clientName = 'Full name is required.';
     if (!formData.clientPhone.trim()) {
-      errors.clientPhone = 'Le numéro de téléphone est obligatoire.';
+      errors.clientPhone = 'Phone number is required.';
     } else if (formData.clientPhone.trim().length < 8) {
-      errors.clientPhone = 'Veuillez saisir un numéro de téléphone valide.';
+      errors.clientPhone = 'Please enter a valid phone number.';
     }
     if (!formData.clientEmail.trim()) {
-      errors.clientEmail = 'L\'adresse email est obligatoire.';
+      errors.clientEmail = 'Email address is required.';
     } else if (!/\S+@\S+\.\S+/.test(formData.clientEmail)) {
-      errors.clientEmail = 'Format d\'adresse email invalide.';
+      errors.clientEmail = 'Invalid email address format.';
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -111,7 +113,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
         habitationType: formData.habitationType,
         message: formData.message.trim(),
         createdAt: new Date().toISOString(),
-        status: 'En attente'
+        status: 'Pending'
       };
 
       const existingRequests = StorageService.getPurchaseRequests();
@@ -130,7 +132,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
       });
     } catch (err) {
       console.error(err);
-      alert('Une erreur est survenue lors de l\'enregistrement de votre demande.');
+      alert('An error occurred while saving your request.');
     } finally {
       setIsSubmitting(false);
     }
@@ -142,14 +144,14 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-3">
           <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-          <span>Vente Directe &amp; Pose Clé en Main</span>
+          <span>Direct Sales &amp; Turnkey Installation</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0D0D0D]">
-          Groupes Électrogènes Diesel Domestiques
+          Residential Diesel Generators
         </h1>
         <p className="text-gray-600 text-base mt-2 max-w-3xl leading-relaxed">
-          Spécifiquement insonorisés pour les villas et maisons individuelles dans le Grand Tunis.
-          Équipés d&apos;inverseurs automatiques ATS pour basculer en quelques secondes sans coupure d&apos;eau ni décongélation.
+          Engineered for quiet operation in villas and single-family residences across Greater Tunis.
+          Equipped with automatic ATS transfer switches to restore power in seconds, preventing food spoilage and water pump interruption.
         </p>
       </div>
 
@@ -161,7 +163,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Rechercher par nom, moteur, kVA (ex: 15 kVA, HomeSilent)..."
+              placeholder="Search by model, engine, or kVA (e.g. 15 kVA, HomeSilent)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -175,10 +177,10 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-700"
             >
-              <option value="all">Toutes les catégories</option>
-              <option value="Domestique Compact">Domestique Compact (7-11 kVA)</option>
-              <option value="Résidentiel Villa">Résidentiel Villa (15 kVA)</option>
-              <option value="Grand Domaine & Duplex">Grand Domaine &amp; Duplex (28 kVA)</option>
+              <option value="all">All categories</option>
+              <option value="Compact Home">Compact Home (7-11 kVA)</option>
+              <option value="Residential Villa">Residential Villa (15 kVA)</option>
+              <option value="Estate & Large Duplex">Estate &amp; Large Duplex (28 kVA)</option>
             </select>
           </div>
 
@@ -189,17 +191,17 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               onChange={(e) => setKvaFilter(e.target.value)}
               className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-700"
             >
-              <option value="all">Toutes les puissances</option>
-              <option value="under10">Jusqu&apos;à 10 kVA (Maison simple)</option>
-              <option value="10to20">11 à 20 kVA (Villa standard)</option>
-              <option value="above20">Plus de 20 kVA (Grande villa / Triphasé)</option>
+              <option value="all">All power ratings</option>
+              <option value="under10">Up to 10 kVA (Compact House)</option>
+              <option value="10to20">11 to 20 kVA (Standard Villa)</option>
+              <option value="above20">Over 20 kVA (Large Villa / Three-Phase)</option>
             </select>
           </div>
         </div>
 
         {/* Active counter & Reset */}
         <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
-          <span>{filteredGenerators.length} modèle(s) diesel disponible(s)</span>
+          <span>{filteredGenerators.length} diesel generator model(s) available</span>
           {(searchTerm || categoryFilter !== 'all' || kvaFilter !== 'all') && (
             <button
               onClick={() => {
@@ -209,7 +211,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               }}
               className="text-amber-600 hover:text-amber-700 font-semibold"
             >
-              Réinitialiser les filtres
+              Reset filters
             </button>
           )}
         </div>
@@ -238,7 +240,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               <div className="absolute top-3 right-3">
                 <span
                   className={`px-2.5 py-1 text-xs font-semibold rounded-md shadow-sm border ${
-                    gen.availability === 'En stock'
+                    gen.availability === 'In Stock' || gen.availability === 'En stock'
                       ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                       : 'bg-amber-50 text-amber-800 border-amber-200'
                   }`}
@@ -267,11 +269,11 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                 <div className="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-y-2 text-xs text-gray-600">
                   <div className="flex items-center gap-1.5">
                     <Fuel className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                    <span>Conso: {gen.consumptionLitersPerHour} L/h</span>
+                    <span>Usage: {gen.consumptionLitersPerHour} L/h</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                    <span>Autonomie: {gen.autonomyHours}h</span>
+                    <span>Autonomy: {gen.autonomyHours}h</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Zap className="w-3.5 h-3.5 text-amber-600 shrink-0" />
@@ -279,7 +281,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>ATS Automatique</span>
+                    <span>Automatic ATS</span>
                   </div>
                 </div>
               </div>
@@ -288,14 +290,14 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               <div className="pt-4 border-t border-gray-100 space-y-3">
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <span className="text-xs text-gray-400">Prix TTC (Tunis)</span>
+                    <span className="text-xs text-gray-400">Price incl. VAT (Tunis)</span>
                     <div className="text-2xl font-black text-[#0D0D0D]">
-                      {gen.priceTnd.toLocaleString('fr-TN')}{' '}
+                      {gen.priceTnd.toLocaleString('en-US')}{' '}
                       <span className="text-sm font-semibold text-gray-500">TND</span>
                     </div>
                   </div>
                   <span className="text-xs text-gray-500 font-medium">
-                    Garantie {gen.warrantyYears} ans
+                    {gen.warrantyYears}-Year Warranty
                   </span>
                 </div>
 
@@ -304,13 +306,13 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     onClick={() => onOpenDetails(gen)}
                     className="px-3 py-2.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg text-center transition-colors focus:ring-2 focus:ring-gray-300"
                   >
-                    Voir détails
+                    View details
                   </button>
                   <button
                     onClick={() => onOpenPurchase(gen)}
                     className="px-3 py-2.5 text-xs font-bold text-white bg-amber-500 hover:bg-amber-600 rounded-lg text-center transition-all shadow-sm active:scale-97 focus:ring-2 focus:ring-amber-500"
                   >
-                    Demander achat
+                    Request purchase
                   </button>
                 </div>
               </div>
@@ -322,9 +324,9 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
       {filteredGenerators.length === 0 && (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-200 p-8 space-y-3">
           <Filter className="w-8 h-8 text-gray-400 mx-auto" />
-          <h3 className="text-lg font-bold text-gray-800">Aucun groupe ne correspond à votre recherche</h3>
+          <h3 className="text-lg font-bold text-gray-800">No generators match your search criteria</h3>
           <p className="text-sm text-gray-500">
-            Essayez d&apos;ajuster vos filtres de puissance ou contactez nos ingénieurs pour un dimensionnement sur-mesure.
+            Try adjusting your power rating filter or reach out to our team for custom sizing.
           </p>
         </div>
       )}
@@ -341,7 +343,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
             <button
               onClick={onCloseDetails}
               className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-black shadow-sm"
-              aria-label="Fermer"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
@@ -363,7 +365,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                   {selectedGeneratorForDetails.name}
                 </h2>
                 <p className="text-sm text-gray-300 mt-1">
-                  Puissance nominale : {selectedGeneratorForDetails.kva} kVA ({selectedGeneratorForDetails.kw} kW)
+                  Rated capacity: {selectedGeneratorForDetails.kva} kVA ({selectedGeneratorForDetails.kw} kW)
                 </p>
               </div>
             </div>
@@ -373,7 +375,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               {/* Description */}
               <div>
                 <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">
-                  Présentation du produit
+                  Product Overview
                 </h4>
                 <p className="text-gray-700 text-sm leading-relaxed">
                   {selectedGeneratorForDetails.description}
@@ -383,48 +385,48 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               {/* Technical Specifications Table */}
               <div>
                 <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-3">
-                  Spécifications Techniques Complètes
+                  Full Technical Specifications
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-gray-50 p-4 rounded-xl border border-gray-200">
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Motorisation :</span>
+                    <span className="text-gray-500">Engine Type:</span>
                     <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.engine}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Carburant :</span>
+                    <span className="text-gray-500">Fuel Grade:</span>
                     <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.fuel}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Capacité réservoir :</span>
-                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.tankCapacityLiters} Litres</span>
+                    <span className="text-gray-500">Tank Capacity:</span>
+                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.tankCapacityLiters} Liters</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Consommation :</span>
-                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.consumptionLitersPerHour} L/h à 75%</span>
+                    <span className="text-gray-500">Fuel Consumption:</span>
+                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.consumptionLitersPerHour} L/h @ 75% load</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Niveau sonore :</span>
+                    <span className="text-gray-500">Sound Level:</span>
                     <span className="font-semibold text-emerald-700 text-right">{selectedGeneratorForDetails.soundLevelDb} dB(A) @ 7m</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Tension de sortie :</span>
+                    <span className="text-gray-500">Output Voltage:</span>
                     <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.voltage}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Inverseur ATS automatique :</span>
-                    <span className="font-bold text-amber-700 text-right">Inclus &amp; Pré-câblé</span>
+                    <span className="text-gray-500">Automatic ATS Switch:</span>
+                    <span className="font-bold text-amber-700 text-right">Included &amp; Pre-wired</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-gray-200">
-                    <span className="text-gray-500">Dimensions (L x l x h) :</span>
+                    <span className="text-gray-500">Dimensions (L x W x H):</span>
                     <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.dimensions}</span>
                   </div>
                   <div className="flex justify-between py-1.5">
-                    <span className="text-gray-500">Poids net :</span>
+                    <span className="text-gray-500">Net Weight:</span>
                     <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.weightKg} kg</span>
                   </div>
                   <div className="flex justify-between py-1.5">
-                    <span className="text-gray-500">Garantie fabricant :</span>
-                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.warrantyYears} ans pièces &amp; MO</span>
+                    <span className="text-gray-500">Manufacturer Warranty:</span>
+                    <span className="font-semibold text-gray-800 text-right">{selectedGeneratorForDetails.warrantyYears} years parts &amp; labor</span>
                   </div>
                 </div>
               </div>
@@ -432,7 +434,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               {/* Key Features */}
               <div>
                 <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-2">
-                  Avantages VOLT &amp; Équipements inclus
+                  VOLT Advantages &amp; Included Features
                 </h4>
                 <ul className="space-y-2 text-xs sm:text-sm text-gray-700">
                   {selectedGeneratorForDetails.features.map((feat, idx) => (
@@ -447,9 +449,9 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               {/* Footer CTA */}
               <div className="pt-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <span className="text-xs text-gray-500">Prix public TTC Grand Tunis</span>
+                  <span className="text-xs text-gray-500">Retail price (incl. VAT Greater Tunis)</span>
                   <div className="text-2xl font-black text-[#0D0D0D]">
-                    {selectedGeneratorForDetails.priceTnd.toLocaleString('fr-TN')} TND
+                    {selectedGeneratorForDetails.priceTnd.toLocaleString('en-US')} TND
                   </div>
                 </div>
 
@@ -458,7 +460,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     onClick={onCloseDetails}
                     className="flex-1 sm:flex-none px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-black border border-gray-300 rounded-xl"
                   >
-                    Fermer
+                    Close
                   </button>
                   <button
                     onClick={() => {
@@ -468,7 +470,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     }}
                     className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 rounded-xl shadow-md transition-all active:scale-97"
                   >
-                    Demander un achat
+                    Request Purchase
                   </button>
                 </div>
               </div>
@@ -491,7 +493,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                 setSubmittedRequest(null);
               }}
               className="absolute top-4 right-4 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-              aria-label="Fermer"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
@@ -501,28 +503,28 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#0D0D0D]">Demande Enregistrée avec Succès !</h3>
+                <h3 className="text-2xl font-bold text-[#0D0D0D]">Purchase Request Received!</h3>
                 <p className="text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
-                  Votre demande d&apos;achat pour le <strong>{submittedRequest.generatorName}</strong> ({submittedRequest.generatorKva} kVA)
-                  a été transmise à notre service commercial du Grand Tunis.
+                  Your purchase inquiry for the <strong>{submittedRequest.generatorName}</strong> ({submittedRequest.generatorKva} kVA)
+                  has been routed to our Greater Tunis technical sales team.
                 </p>
 
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-left max-w-md mx-auto text-xs space-y-1.5">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Numéro de référence :</span>
+                    <span className="text-gray-500">Reference Number:</span>
                     <span className="font-mono font-bold text-amber-800">{submittedRequest.id}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Client :</span>
+                    <span className="text-gray-500">Customer:</span>
                     <span className="font-semibold text-gray-800">{submittedRequest.clientName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Localisation :</span>
+                    <span className="text-gray-500">Location:</span>
                     <span className="font-semibold text-gray-800">{submittedRequest.city} ({submittedRequest.habitationType})</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Délai de rappel :</span>
-                    <span className="font-semibold text-emerald-700">Moins de 2 heures ouvrées</span>
+                    <span className="text-gray-500">Callback Commitment:</span>
+                    <span className="font-semibold text-emerald-700">Within 2 business hours</span>
                   </div>
                 </div>
 
@@ -534,7 +536,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     }}
                     className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm transition-all"
                   >
-                    Retour au catalogue
+                    Back to Catalog
                   </button>
                 </div>
               </div>
@@ -542,28 +544,28 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
               <form onSubmit={handlePurchaseSubmit} className="space-y-5">
                 <div>
                   <span className="text-xs uppercase tracking-wider font-bold text-amber-600">
-                    Demande de devis &amp; Achat
+                    Quote Request &amp; Purchase
                   </span>
                   <h3 className="text-xl sm:text-2xl font-bold text-[#0D0D0D]">
                     {selectedGeneratorForPurchase.name}
                   </h3>
                   <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                    <span>Puissance : <strong>{selectedGeneratorForPurchase.kva} kVA</strong></span>
+                    <span>Power: <strong>{selectedGeneratorForPurchase.kva} kVA</strong></span>
                     <span>·</span>
-                    <span>Prix : <strong className="text-amber-600">{selectedGeneratorForPurchase.priceTnd.toLocaleString('fr-TN')} TND</strong></span>
+                    <span>Price: <strong className="text-amber-600">{selectedGeneratorForPurchase.priceTnd.toLocaleString('en-US')} TND</strong></span>
                     <span>·</span>
-                    <span>Inverseur ATS inclus</span>
+                    <span>Automatic ATS Included</span>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Nom &amp; Prénom *
+                      Full Name *
                     </label>
                     <input
                       type="text"
-                      placeholder="Ex: Mohamed Ben Mahmoud"
+                      placeholder="e.g. Mohamed Ben Mahmoud"
                       value={formData.clientName}
                       onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                       className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -578,11 +580,11 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Numéro de téléphone (+216) *
+                        Phone Number (+216) *
                       </label>
                       <input
                         type="tel"
-                        placeholder="Ex: 98 123 456"
+                        placeholder="e.g. 98 123 456"
                         value={formData.clientPhone}
                         onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -596,11 +598,11 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Adresse Email *
+                        Email Address *
                       </label>
                       <input
                         type="email"
-                        placeholder="Ex: mohamed@gmail.com"
+                        placeholder="e.g. mohamed@gmail.com"
                         value={formData.clientEmail}
                         onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
                         className={`w-full px-3.5 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${
@@ -616,7 +618,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Ville / Quartier (Grand Tunis)
+                        City / Neighborhood (Greater Tunis)
                       </label>
                       <select
                         value={formData.city}
@@ -626,43 +628,43 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                         <option value="La Marsa">La Marsa</option>
                         <option value="Gammarth">Gammarth</option>
                         <option value="Carthage">Carthage</option>
-                        <option value="Sidi Bou Said">Sidi Bou Saïd</option>
+                        <option value="Sidi Bou Said">Sidi Bou Said</option>
                         <option value="La Soukra">La Soukra</option>
                         <option value="Ennasr 1 & 2">Ennasr 1 &amp; 2</option>
-                        <option value="Menzah (1 à 9)">Menzah (1 à 9)</option>
+                        <option value="Menzah (1 à 9)">Menzah (1 to 9)</option>
                         <option value="Manar">Manar</option>
-                        <option value="Ariana Ville">Ariana Ville</option>
+                        <option value="Ariana Ville">Ariana</option>
                         <option value="Les Berges du Lac 1 & 2">Les Berges du Lac 1 &amp; 2</option>
-                        <option value="Ben Arous / Megrine">Ben Arous / Mégrine</option>
-                        <option value="Autre région">Autre région</option>
+                        <option value="Ben Arous / Megrine">Ben Arous / Megrine</option>
+                        <option value="Autre région">Other area</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Type d&apos;habitation
+                        Property Type
                       </label>
                       <select
                         value={formData.habitationType}
                         onChange={(e) => setFormData({ ...formData, habitationType: e.target.value as HabitationType })}
                         className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
                       >
-                        <option value="Villa">Villa avec jardin / cour</option>
-                        <option value="Maison individuelle">Maison individuelle</option>
-                        <option value="Duplex">Duplex résidentiel</option>
-                        <option value="Petit commerce">Petit commerce / Cabinet médical</option>
-                        <option value="Autre">Autre</option>
+                        <option value="Villa">Villa with garden / courtyard</option>
+                        <option value="Detached House">Detached single-family house</option>
+                        <option value="Duplex">Residential duplex</option>
+                        <option value="Small Business">Small business / Medical clinic</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Précisions d&apos;installation ou question (Optionnel)
+                      Installation notes or questions (Optional)
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="Ex: Emplacement prévu dans la cour arrière, nous avons un tableau triphasé..."
+                      placeholder="e.g. Scheduled location in backyard, we have a three-phase electrical box..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full px-3.5 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -676,7 +678,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     onClick={onClosePurchase}
                     className="px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-black"
                   >
-                    Annuler
+                    Cancel
                   </button>
                   <button
                     type="submit"
@@ -684,7 +686,7 @@ export const SalesSection: React.FC<SalesSectionProps> = ({
                     className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md active:scale-97 transition-all disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isSubmitting ? 'Transmission...' : 'Confirmer ma demande'}</span>
+                    <span>{isSubmitting ? 'Submitting...' : 'Confirm Request'}</span>
                   </button>
                 </div>
               </form>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  LayoutDashboard,
   Package,
   Truck,
   ShoppingCart,
@@ -8,13 +7,7 @@ import {
   Plus,
   Trash2,
   Edit,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  UserCheck,
-  MessageSquare,
   Search,
-  Filter,
   LogOut,
   ChevronDown,
   ChevronUp,
@@ -90,20 +83,24 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
   const [newNoteText, setNewNoteText] = useState<{ [ticketId: string]: string }>({});
 
   // 4 Clickable Dashboard Statistics
-  const pendingPurchases = purchaseRequests.filter((p) => p.status === 'En attente').length;
+  const pendingPurchases = purchaseRequests.filter(
+    (p) => p.status === 'Pending' || p.status === 'En attente'
+  ).length;
   const availableRentals = rentalUnits.filter((u) => u.available).length;
-  const openTickets = tickets.filter((t) => t.status === 'Ouvert' || t.status === 'En cours').length;
+  const openTickets = tickets.filter(
+    (t) => t.status === 'Open' || t.status === 'Ouvert' || t.status === 'In Progress' || t.status === 'En cours'
+  ).length;
 
   // GENERATORS CRUD
   const handleOpenAddGenerator = () => {
     setEditingGenerator(null);
     setGenForm({
       name: '',
-      category: 'Domestique Compact',
+      category: 'Compact Home',
       kva: 10,
       kw: 8,
-      engine: 'Diesel 4 temps',
-      fuel: 'Gasoil 50',
+      engine: '4-stroke diesel',
+      fuel: 'Low-Sulfur Diesel (Gasoil 50)',
       tankCapacityLiters: 20,
       consumptionLitersPerHour: 1.5,
       autonomyHours: 12,
@@ -111,12 +108,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
       dimensions: '950 x 550 x 750 mm',
       weightKg: 160,
       atsIncluded: true,
-      voltage: '230V Monophasé',
+      voltage: '230V Single-Phase',
       warrantyYears: 2,
       priceTnd: 9500,
-      availability: 'En stock',
+      availability: 'In Stock',
       description: '',
-      features: ['Inverseur automatique ATS inclus', 'Capotage insonorisé'],
+      features: ['Automatic ATS transfer switch included', 'Soundproof acoustic canopy'],
       imageUrl: '/src/assets/images/gen_home_compact_1790543060063.jpg'
     });
     setIsGeneratorModalOpen(true);
@@ -144,11 +141,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
       const newGen: Generator = {
         id: `gen-${Date.now()}`,
         name: genForm.name || 'VOLT Generator',
-        category: genForm.category || 'Domestique Compact',
+        category: genForm.category || 'Compact Home',
         kva: Number(genForm.kva) || 10,
         kw: Number(genForm.kw) || 8,
         engine: genForm.engine || 'Diesel',
-        fuel: genForm.fuel || 'Gasoil 50',
+        fuel: genForm.fuel || 'Low-Sulfur Diesel (Gasoil 50)',
         tankCapacityLiters: Number(genForm.tankCapacityLiters) || 15,
         consumptionLitersPerHour: Number(genForm.consumptionLitersPerHour) || 1.5,
         autonomyHours: Number(genForm.autonomyHours) || 10,
@@ -156,12 +153,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         dimensions: genForm.dimensions || '1000 x 600 x 800 mm',
         weightKg: Number(genForm.weightKg) || 180,
         atsIncluded: genForm.atsIncluded ?? true,
-        voltage: genForm.voltage || '230V Monophasé',
+        voltage: genForm.voltage || '230V Single-Phase',
         warrantyYears: Number(genForm.warrantyYears) || 2,
         priceTnd: Number(genForm.priceTnd) || 10000,
-        availability: genForm.availability || 'En stock',
+        availability: genForm.availability || 'In Stock',
         description: genForm.description || '',
-        features: genForm.features || ['Inverseur ATS automatique'],
+        features: genForm.features || ['Automatic ATS transfer switch'],
         imageUrl: genForm.imageUrl || '/src/assets/images/gen_home_compact_1790543060063.jpg'
       };
       const updated = [newGen, ...generators];
@@ -181,8 +178,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
       weeklyRateTnd: 650,
       available: true,
       soundLevelDb: 62,
-      fuelType: 'Diesel / Gasoil 50',
-      idealFor: 'Villa, réception privée',
+      fuelType: 'Low-Sulfur Diesel (Gasoil 50)',
+      idealFor: 'Villa, private reception',
       description: '',
       imageUrl: '/src/assets/images/gen_rental_unit_1790543090833.jpg'
     });
@@ -214,8 +211,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         weeklyRateTnd: Number(rentForm.weeklyRateTnd) || 600,
         available: rentForm.available ?? true,
         soundLevelDb: Number(rentForm.soundLevelDb) || 62,
-        fuelType: rentForm.fuelType || 'Diesel',
-        idealFor: rentForm.idealFor || 'Maison individuelle',
+        fuelType: rentForm.fuelType || 'Low-Sulfur Diesel (Gasoil 50)',
+        idealFor: rentForm.idealFor || 'Detached House',
         description: rentForm.description || '',
         imageUrl: rentForm.imageUrl || '/src/assets/images/gen_rental_unit_1790543090833.jpg'
       };
@@ -287,7 +284,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         ? {
             ...t,
             technician,
-            status: t.status === 'Ouvert' ? ('Assigné' as TicketStatus) : t.status,
+            status:
+              t.status === 'Open' || t.status === 'Ouvert'
+                ? ('Assigned' as TicketStatus)
+                : t.status,
             updatedAt: new Date().toISOString()
           }
         : t
@@ -304,7 +304,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
       if (t.id === ticketId) {
         const newNote = {
           id: `note-${Date.now()}`,
-          author: 'Admin VOLT',
+          author: 'VOLT Admin',
           text: noteContent,
           createdAt: new Date().toISOString()
         };
@@ -329,7 +329,16 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
       t.clientName.toLowerCase().includes(ticketSearch.toLowerCase()) ||
       t.clientEmail.toLowerCase().includes(ticketSearch.toLowerCase()) ||
       t.generatorModel.toLowerCase().includes(ticketSearch.toLowerCase());
-    const matchStatus = ticketStatusFilter === 'all' || t.status === ticketStatusFilter;
+
+    const matchStatus =
+      ticketStatusFilter === 'all' ||
+      t.status === ticketStatusFilter ||
+      (ticketStatusFilter === 'Open' && (t.status === 'Open' || t.status === 'Ouvert')) ||
+      (ticketStatusFilter === 'Assigned' && (t.status === 'Assigned' || t.status === 'Assigné')) ||
+      (ticketStatusFilter === 'In Progress' && (t.status === 'In Progress' || t.status === 'En cours')) ||
+      (ticketStatusFilter === 'Resolved' && (t.status === 'Resolved' || t.status === 'Résolu')) ||
+      (ticketStatusFilter === 'Closed' && (t.status === 'Closed' || t.status === 'Fermé'));
+
     return matchSearch && matchStatus;
   });
 
@@ -341,11 +350,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
             <span className="text-xs uppercase font-extrabold tracking-wider text-amber-700">
-              Console d&apos;Administration VOLT
+              VOLT Administration Console
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D0D0D] mt-1">
-            Gestion Opérationnelle Grand Tunis
+            Greater Tunis Operations Management
           </h1>
         </div>
 
@@ -354,7 +363,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-red-50 text-gray-700 hover:text-red-700 border border-gray-300 text-xs font-bold transition-colors w-fit"
         >
           <LogOut className="w-4 h-4" />
-          <span>Fermer le mode Admin</span>
+          <span>Exit Admin Mode</span>
         </button>
       </div>
 
@@ -371,13 +380,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Générateurs en Vente
+              Sales Inventory
             </span>
             <Package className="w-5 h-5 text-amber-600" />
           </div>
           <div className="text-3xl font-black text-[#0D0D0D]">{generators.length}</div>
           <span className="text-[11px] text-gray-500 mt-1 block">
-            {generators.filter((g) => g.availability === 'En stock').length} en stock immédiat
+            {generators.filter((g) => g.availability === 'In Stock' || g.availability === 'En stock').length} available in stock
           </span>
         </div>
 
@@ -392,13 +401,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Unités en Location
+              Rental Fleet
             </span>
             <Truck className="w-5 h-5 text-amber-600" />
           </div>
           <div className="text-3xl font-black text-[#0D0D0D]">{rentalUnits.length}</div>
           <span className="text-[11px] text-emerald-600 font-semibold mt-1 block">
-            {availableRentals} prête(s) à livrer
+            {availableRentals} ready to deploy
           </span>
         </div>
 
@@ -413,13 +422,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Demandes d&apos;Achat
+              Purchase Inquiries
             </span>
             <ShoppingCart className="w-5 h-5 text-amber-600" />
           </div>
           <div className="text-3xl font-black text-[#0D0D0D]">{purchaseRequests.length}</div>
           <span className="text-[11px] text-amber-700 font-bold mt-1 block">
-            {pendingPurchases} en attente de contact
+            {pendingPurchases} pending follow-up
           </span>
         </div>
 
@@ -434,13 +443,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Tickets Support
+              Support Tickets
             </span>
             <Wrench className="w-5 h-5 text-red-600" />
           </div>
           <div className="text-3xl font-black text-[#0D0D0D]">{tickets.length}</div>
           <span className="text-[11px] text-red-600 font-bold mt-1 block">
-            {openTickets} actif(s) / urgence
+            {openTickets} active / emergency
           </span>
         </div>
       </div>
@@ -455,7 +464,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
           }`}
         >
-          Catalogue Vente ({generators.length})
+          Sales Catalog ({generators.length})
         </button>
 
         <button
@@ -466,7 +475,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
           }`}
         >
-          Parc de Location ({rentalUnits.length})
+          Rental Fleet ({rentalUnits.length})
         </button>
 
         <button
@@ -477,7 +486,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
           }`}
         >
-          Demandes d&apos;Achat ({purchaseRequests.length})
+          Purchase Inquiries ({purchaseRequests.length})
         </button>
 
         <button
@@ -488,7 +497,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
           }`}
         >
-          Réservations Location ({rentalRequests.length})
+          Rental Bookings ({rentalRequests.length})
         </button>
 
         <button
@@ -499,7 +508,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
           }`}
         >
-          Tickets Support ({tickets.length})
+          Support Tickets ({tickets.length})
         </button>
       </div>
 
@@ -508,15 +517,15 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-[#0D0D0D]">Gestion des Générateurs en Vente</h3>
-              <p className="text-xs text-gray-500">Ajoutez, modifiez les tarifs ou supprimez des modèles.</p>
+              <h3 className="text-lg font-bold text-[#0D0D0D]">Sales Generator Inventory</h3>
+              <p className="text-xs text-gray-500">Add, adjust pricing, or manage generator models.</p>
             </div>
             <button
               onClick={handleOpenAddGenerator}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition-all"
             >
               <Plus className="w-4 h-4" />
-              <span>Nouveau Générateur</span>
+              <span>New Generator</span>
             </button>
           </div>
 
@@ -524,12 +533,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 text-gray-500 uppercase tracking-wider font-semibold border-b border-gray-200">
                 <tr>
-                  <th className="py-3 px-4">Modèle &amp; Photo</th>
-                  <th className="py-3 px-4">Catégorie</th>
-                  <th className="py-3 px-4">Puissance</th>
-                  <th className="py-3 px-4">Bruit</th>
-                  <th className="py-3 px-4">Prix TTC</th>
-                  <th className="py-3 px-4">Disponibilité</th>
+                  <th className="py-3 px-4">Model &amp; Photo</th>
+                  <th className="py-3 px-4">Category</th>
+                  <th className="py-3 px-4">Capacity</th>
+                  <th className="py-3 px-4">Noise</th>
+                  <th className="py-3 px-4">Price (incl. VAT)</th>
+                  <th className="py-3 px-4">Availability</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -549,7 +558,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                     <td className="py-3 px-4 font-bold text-gray-800">{g.kva} kVA</td>
                     <td className="py-3 px-4 text-gray-600">{g.soundLevelDb} dB(A)</td>
                     <td className="py-3 px-4 font-extrabold text-amber-600">
-                      {g.priceTnd.toLocaleString('fr-TN')} TND
+                      {g.priceTnd.toLocaleString('en-US')} TND
                     </td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-800">
@@ -560,7 +569,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                       <button
                         onClick={() => handleOpenEditGenerator(g)}
                         className="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded"
-                        title="Modifier"
+                        title="Edit"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
@@ -573,7 +582,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           })
                         }
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
-                        title="Supprimer"
+                        title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -591,15 +600,15 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-[#0D0D0D]">Gestion des Unités de Location</h3>
-              <p className="text-xs text-gray-500">Gérez le parc disponible pour livraison immédiate.</p>
+              <h3 className="text-lg font-bold text-[#0D0D0D]">Rental Fleet Management</h3>
+              <p className="text-xs text-gray-500">Manage units available for immediate on-site delivery.</p>
             </div>
             <button
               onClick={handleOpenAddRental}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition-all"
             >
               <Plus className="w-4 h-4" />
-              <span>Ajouter une Unité</span>
+              <span>Add Rental Unit</span>
             </button>
           </div>
 
@@ -607,11 +616,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 text-gray-500 uppercase tracking-wider font-semibold border-b border-gray-200">
                 <tr>
-                  <th className="py-3 px-4">Unité &amp; Photo</th>
-                  <th className="py-3 px-4">Puissance</th>
-                  <th className="py-3 px-4">Tarif Jour</th>
-                  <th className="py-3 px-4">Tarif Semaine</th>
-                  <th className="py-3 px-4">État</th>
+                  <th className="py-3 px-4">Unit &amp; Photo</th>
+                  <th className="py-3 px-4">Capacity</th>
+                  <th className="py-3 px-4">Daily Rate</th>
+                  <th className="py-3 px-4">Weekly Rate</th>
+                  <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -639,14 +648,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           u.available ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {u.available ? 'Disponible' : 'En location'}
+                        {u.available ? 'Available' : 'On Rent'}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-right space-x-2">
                       <button
                         onClick={() => handleOpenEditRental(u)}
                         className="p-1.5 text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded"
-                        title="Modifier"
+                        title="Edit"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
@@ -659,7 +668,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           })
                         }
                         className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
-                        title="Supprimer"
+                        title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -677,23 +686,23 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-bold text-[#0D0D0D]">Demandes d&apos;Achat Client</h3>
-              <p className="text-xs text-gray-500">Traitement des prospects et programmation des visites techniques.</p>
+              <h3 className="text-lg font-bold text-[#0D0D0D]">Client Purchase Inquiries</h3>
+              <p className="text-xs text-gray-500">Follow up with prospective buyers and schedule on-site site surveys.</p>
             </div>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-gray-500">Filtrer statut :</span>
+              <span className="text-gray-500">Filter by status:</span>
               <select
                 value={purchaseStatusFilter}
                 onChange={(e) => setPurchaseStatusFilter(e.target.value)}
                 className="px-3 py-1.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white"
               >
-                <option value="all">Tous</option>
-                <option value="En attente">En attente</option>
-                <option value="Contacté">Contacté</option>
-                <option value="Confirmé">Confirmé</option>
-                <option value="Terminé">Terminé</option>
-                <option value="Rejeté">Rejeté</option>
+                <option value="all">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Completed">Completed</option>
+                <option value="Rejected">Rejected</option>
               </select>
             </div>
           </div>
@@ -702,24 +711,32 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 text-gray-500 uppercase tracking-wider font-semibold border-b border-gray-200">
                 <tr>
-                  <th className="py-3 px-4">Réf &amp; Date</th>
-                  <th className="py-3 px-4">Client</th>
-                  <th className="py-3 px-4">Localisation &amp; Habitat</th>
-                  <th className="py-3 px-4">Modèle Souhaité</th>
-                  <th className="py-3 px-4">Message Client</th>
-                  <th className="py-3 px-4">Statut</th>
+                  <th className="py-3 px-4">Ref &amp; Date</th>
+                  <th className="py-3 px-4">Customer</th>
+                  <th className="py-3 px-4">Location &amp; Property</th>
+                  <th className="py-3 px-4">Desired Model</th>
+                  <th className="py-3 px-4">Client Message</th>
+                  <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {purchaseRequests
-                  .filter((p) => purchaseStatusFilter === 'all' || p.status === purchaseStatusFilter)
+                  .filter((p) => {
+                    if (purchaseStatusFilter === 'all') return true;
+                    if (purchaseStatusFilter === 'Pending') return p.status === 'Pending' || p.status === 'En attente';
+                    if (purchaseStatusFilter === 'Contacted') return p.status === 'Contacted' || p.status === 'Contacté';
+                    if (purchaseStatusFilter === 'Confirmed') return p.status === 'Confirmed' || p.status === 'Confirmé';
+                    if (purchaseStatusFilter === 'Completed') return p.status === 'Completed' || p.status === 'Terminé';
+                    if (purchaseStatusFilter === 'Rejected') return p.status === 'Rejected' || p.status === 'Rejeté';
+                    return p.status === purchaseStatusFilter;
+                  })
                   .map((p) => (
                     <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                       <td className="py-3 px-4">
                         <div className="font-mono font-bold text-gray-900">{p.id}</div>
                         <div className="text-[10px] text-gray-400">
-                          {new Date(p.createdAt).toLocaleDateString('fr-FR')}
+                          {new Date(p.createdAt).toLocaleDateString('en-US')}
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -733,10 +750,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-bold text-gray-900">{p.generatorName}</div>
-                        <div className="text-amber-600 font-semibold">{p.totalPriceTnd.toLocaleString('fr-TN')} TND</div>
+                        <div className="text-amber-600 font-semibold">{p.totalPriceTnd.toLocaleString('en-US')} TND</div>
                       </td>
                       <td className="py-3 px-4 max-w-xs text-gray-600">
-                        {p.message || <span className="text-gray-300 italic">Aucun message</span>}
+                        {p.message || <span className="text-gray-300 italic">No message</span>}
                       </td>
                       <td className="py-3 px-4">
                         <select
@@ -744,11 +761,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           onChange={(e) => handleUpdatePurchaseStatus(p.id, e.target.value as PurchaseStatus)}
                           className="px-2 py-1 border border-gray-200 rounded-md font-semibold text-xs bg-white"
                         >
-                          <option value="En attente">En attente</option>
-                          <option value="Contacté">Contacté</option>
-                          <option value="Confirmé">Confirmé</option>
-                          <option value="Terminé">Terminé</option>
-                          <option value="Rejeté">Rejeté</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Contacted">Contacted</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Rejected">Rejected</option>
                         </select>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -757,11 +774,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                             setDeleteConfirmation({
                               type: 'purchase',
                               id: p.id,
-                              name: `Demande ${p.id} (${p.clientName})`
+                              name: `Request ${p.id} (${p.clientName})`
                             })
                           }
                           className="p-1 text-gray-400 hover:text-red-600"
-                          title="Supprimer"
+                          title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -779,23 +796,23 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-bold text-[#0D0D0D]">Réservations de Location</h3>
-              <p className="text-xs text-gray-500">Planification des livraisons et retraits par nos chauffeurs.</p>
+              <h3 className="text-lg font-bold text-[#0D0D0D]">Rental Reservations</h3>
+              <p className="text-xs text-gray-500">Schedule deliveries and pickups with service drivers.</p>
             </div>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-gray-500">Filtrer statut :</span>
+              <span className="text-gray-500">Filter by status:</span>
               <select
                 value={rentalStatusFilter}
                 onChange={(e) => setRentalStatusFilter(e.target.value)}
                 className="px-3 py-1.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white"
               >
-                <option value="all">Tous</option>
-                <option value="En attente">En attente</option>
-                <option value="Confirmé">Confirmé</option>
-                <option value="Actif">Actif (Sur site)</option>
-                <option value="Terminé">Terminé</option>
-                <option value="Rejeté">Rejeté</option>
+                <option value="all">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Active">Active (On Site)</option>
+                <option value="Completed">Completed</option>
+                <option value="Rejected">Rejected</option>
               </select>
             </div>
           </div>
@@ -804,24 +821,32 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 text-gray-500 uppercase tracking-wider font-semibold border-b border-gray-200">
                 <tr>
-                  <th className="py-3 px-4">Réf &amp; Période</th>
-                  <th className="py-3 px-4">Client</th>
-                  <th className="py-3 px-4">Adresse de livraison</th>
-                  <th className="py-3 px-4">Unité &amp; Options</th>
+                  <th className="py-3 px-4">Ref &amp; Period</th>
+                  <th className="py-3 px-4">Customer</th>
+                  <th className="py-3 px-4">Delivery Address</th>
+                  <th className="py-3 px-4">Unit &amp; Options</th>
                   <th className="py-3 px-4">Total TND</th>
-                  <th className="py-3 px-4">Statut</th>
+                  <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {rentalRequests
-                  .filter((r) => rentalStatusFilter === 'all' || r.status === rentalStatusFilter)
+                  .filter((r) => {
+                    if (rentalStatusFilter === 'all') return true;
+                    if (rentalStatusFilter === 'Pending') return r.status === 'Pending' || r.status === 'En attente';
+                    if (rentalStatusFilter === 'Confirmed') return r.status === 'Confirmed' || r.status === 'Confirmé';
+                    if (rentalStatusFilter === 'Active') return r.status === 'Active' || r.status === 'Actif';
+                    if (rentalStatusFilter === 'Completed') return r.status === 'Completed' || r.status === 'Terminé';
+                    if (rentalStatusFilter === 'Rejected') return r.status === 'Rejected' || r.status === 'Rejeté';
+                    return r.status === rentalStatusFilter;
+                  })
                   .map((r) => (
                     <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                       <td className="py-3 px-4">
                         <div className="font-mono font-bold text-gray-900">{r.id}</div>
                         <div className="text-[10px] text-gray-500">
-                          {r.startDate} au {r.endDate} ({r.durationDays}j)
+                          {r.startDate} to {r.endDate} ({r.durationDays}d)
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -834,8 +859,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                       <td className="py-3 px-4">
                         <div className="font-bold text-gray-900">{r.unitName}</div>
                         <div className="text-[10px] text-gray-500">
-                          {r.includeAtsCable && '• Câble ATS '}
-                          {r.includeFuelTank && '• Plein gasoil'}
+                          {r.includeAtsCable && '• ATS Cable '}
+                          {r.includeFuelTank && '• Diesel Tank'}
                         </div>
                       </td>
                       <td className="py-3 px-4 font-black text-amber-600">
@@ -847,11 +872,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           onChange={(e) => handleUpdateRentalStatus(r.id, e.target.value as RentalStatus)}
                           className="px-2 py-1 border border-gray-200 rounded-md font-semibold text-xs bg-white"
                         >
-                          <option value="En attente">En attente</option>
-                          <option value="Confirmé">Confirmé</option>
-                          <option value="Actif">Actif</option>
-                          <option value="Terminé">Terminé</option>
-                          <option value="Rejeté">Rejeté</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Active">Active</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Rejected">Rejected</option>
                         </select>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -860,11 +885,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                             setDeleteConfirmation({
                               type: 'rental',
                               id: r.id,
-                              name: `Location ${r.id} (${r.clientName})`
+                              name: `Rental ${r.id} (${r.clientName})`
                             })
                           }
                           className="p-1 text-gray-400 hover:text-red-600"
-                          title="Supprimer"
+                          title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -882,9 +907,9 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-bold text-[#0D0D0D]">Gestion des Tickets de Support</h3>
+              <h3 className="text-lg font-bold text-[#0D0D0D]">Support &amp; Emergency Tickets</h3>
               <p className="text-xs text-gray-500">
-                Assignation des techniciens, notes horodatées et suivi de résolution.
+                Dispatch technicians, record timestamped logs, and track issue resolution.
               </p>
             </div>
 
@@ -893,7 +918,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                 <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Rechercher ticket..."
+                  placeholder="Search tickets..."
                   value={ticketSearch}
                   onChange={(e) => setTicketSearch(e.target.value)}
                   className="pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50 focus:bg-white"
@@ -905,12 +930,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                 onChange={(e) => setTicketStatusFilter(e.target.value)}
                 className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs bg-gray-50 focus:bg-white"
               >
-                <option value="all">Tous statuts</option>
-                <option value="Ouvert">Ouvert</option>
-                <option value="Assigné">Assigné</option>
-                <option value="En cours">En cours</option>
-                <option value="Résolu">Résolu</option>
-                <option value="Fermé">Fermé</option>
+                <option value="all">All statuses</option>
+                <option value="Open">Open</option>
+                <option value="Assigned">Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
               </select>
             </div>
           </div>
@@ -939,14 +964,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           </span>
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                              t.urgency === 'Urgence'
+                              t.urgency === 'Emergency' || t.urgency === 'Urgence'
                                 ? 'bg-red-100 text-red-800'
-                                : t.urgency === 'Urgent'
+                                : t.urgency === 'High' || t.urgency === 'Urgent'
                                 ? 'bg-amber-100 text-amber-800'
                                 : 'bg-gray-100 text-gray-700'
                             }`}
                           >
-                            {t.urgency}
+                            {t.urgency === 'Urgence' ? 'Emergency' : t.urgency === 'Urgent' ? 'High' : t.urgency === 'Normal' ? 'Standard' : t.urgency}
                           </span>
                         </div>
                         <div className="text-xs font-semibold text-gray-800 mt-1">
@@ -962,11 +987,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                         onChange={(e) => handleUpdateTicketStatus(t.id, e.target.value as TicketStatus)}
                         className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-gray-300 bg-white"
                       >
-                        <option value="Ouvert">Ouvert</option>
-                        <option value="Assigné">Assigné</option>
-                        <option value="En cours">En cours</option>
-                        <option value="Résolu">Résolu</option>
-                        <option value="Fermé">Fermé</option>
+                        <option value="Open">Open</option>
+                        <option value="Assigned">Assigned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
                       </select>
 
                       <button
@@ -978,7 +1003,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                           })
                         }
                         className="p-1 text-gray-400 hover:text-red-600"
-                        title="Supprimer"
+                        title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -990,24 +1015,24 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                     <div className="p-5 border-t border-gray-200 bg-white space-y-4 text-xs">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
                         <div>
-                          <span className="text-gray-400 block">Téléphone :</span>
+                          <span className="text-gray-400 block">Phone:</span>
                           <a href={`tel:${t.clientPhone}`} className="font-semibold text-amber-700 hover:underline">
                             {t.clientPhone}
                           </a>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">Email :</span>
+                          <span className="text-gray-400 block">Email:</span>
                           <span className="font-medium text-gray-800">{t.clientEmail}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400 block">Adresse :</span>
+                          <span className="text-gray-400 block">Address:</span>
                           <span className="font-medium text-gray-800">{t.address}</span>
                         </div>
                       </div>
 
                       <div>
                         <div className="font-semibold text-gray-900 mb-1">
-                          Catégorie : <span className="font-bold text-amber-700">{t.problemCategory}</span>
+                          Category: <span className="font-bold text-amber-700">{t.problemCategory}</span>
                         </div>
                         <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-700 leading-relaxed">
                           {t.description}
@@ -1018,11 +1043,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                         <div>
                           <div className="font-semibold text-gray-900 mb-1 flex items-center gap-1.5">
                             <ImageIcon className="w-3.5 h-3.5 text-gray-500" />
-                            <span>Photo transmise par le client :</span>
+                            <span>Client Incident Photo:</span>
                           </div>
                           <img
                             src={t.photoBase64}
-                            alt="Photo incident"
+                            alt="Incident attachment"
                             className="max-h-56 rounded-xl border border-gray-200 shadow-sm"
                           />
                         </div>
@@ -1031,11 +1056,11 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                       {/* Technician assignment */}
                       <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-3">
                         <label className="font-semibold text-gray-700 shrink-0">
-                          Technicien d&apos;astreinte assigné :
+                          Assigned On-Call Technician:
                         </label>
                         <input
                           type="text"
-                          placeholder="Ex: Firas Belhaj / Nidhal Jlassi"
+                          placeholder="e.g. Firas Belhaj / Nidhal Jlassi"
                           value={t.technician || ''}
                           onChange={(e) => handleAssignTechnician(t.id, e.target.value)}
                           className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs max-w-xs focus:outline-none focus:ring-1 focus:ring-amber-500"
@@ -1045,8 +1070,8 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                       {/* Notes journal */}
                       <div className="pt-3 border-t border-gray-200 space-y-3">
                         <div className="font-bold text-gray-900 flex items-center gap-1.5">
-                          <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
-                          <span>Journal des interventions &amp; Notes d&apos;atelier</span>
+                          <Wrench className="w-3.5 h-3.5 text-amber-600" />
+                          <span>Service Log &amp; Workshop Notes</span>
                         </div>
 
                         {t.notes && t.notes.length > 0 ? (
@@ -1055,21 +1080,21 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                               <div key={n.id} className="p-2.5 rounded-lg bg-amber-50/70 border border-amber-200 text-xs">
                                 <div className="flex items-center justify-between text-[10px] text-gray-500 mb-0.5">
                                   <span className="font-bold text-amber-900">{n.author}</span>
-                                  <span>{new Date(n.createdAt).toLocaleString('fr-FR')}</span>
+                                  <span>{new Date(n.createdAt).toLocaleString('en-US')}</span>
                                 </div>
                                 <div className="text-gray-800">{n.text}</div>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <div className="text-gray-400 italic">Aucune note enregistrée pour l&apos;instant.</div>
+                          <div className="text-gray-400 italic">No notes recorded yet.</div>
                         )}
 
                         {/* Add note input */}
                         <div className="flex gap-2 pt-1">
                           <input
                             type="text"
-                            placeholder="Ajouter une note d'intervention (ex: diagnostic bobine effectué...)"
+                            placeholder="Add service note (e.g. coil diagnostic completed...)"
                             value={newNoteText[t.id] || ''}
                             onChange={(e) =>
                               setNewNoteText({ ...newNoteText, [t.id]: e.target.value })
@@ -1087,7 +1112,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                             onClick={() => handleAddTicketNote(t.id)}
                             className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs"
                           >
-                            Ajouter
+                            Add Note
                           </button>
                         </div>
                       </div>
@@ -1109,13 +1134,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[92vh] overflow-y-auto shadow-2xl border border-gray-200">
             <h3 className="text-xl font-bold text-[#0D0D0D] mb-4">
-              {editingGenerator ? `Modifier ${editingGenerator.name}` : 'Ajouter un Nouveau Générateur Diesel'}
+              {editingGenerator ? `Edit ${editingGenerator.name}` : 'Add New Diesel Generator'}
             </h3>
 
             <form onSubmit={handleSaveGenerator} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Nom du modèle *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Model Name *</label>
                   <input
                     type="text"
                     required
@@ -1126,22 +1151,22 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Catégorie</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Category</label>
                   <select
                     value={genForm.category}
                     onChange={(e) => setGenForm({ ...genForm, category: e.target.value as Generator['category'] })}
                     className="w-full px-3 py-2 border rounded-lg bg-white"
                   >
-                    <option value="Domestique Compact">Domestique Compact</option>
-                    <option value="Résidentiel Villa">Résidentiel Villa</option>
-                    <option value="Grand Domaine & Duplex">Grand Domaine &amp; Duplex</option>
+                    <option value="Compact Home">Compact Home</option>
+                    <option value="Residential Villa">Residential Villa</option>
+                    <option value="Estate & Large Duplex">Estate &amp; Large Duplex</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Puissance kVA *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Capacity kVA *</label>
                   <input
                     type="number"
                     required
@@ -1151,7 +1176,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Puissance kW</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Output kW</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1161,7 +1186,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Prix TND (TTC) *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Price TND (incl. VAT) *</label>
                   <input
                     type="number"
                     required
@@ -1174,7 +1199,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Bruit dB(A) à 7m</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Sound dB(A) @ 7m</label>
                   <input
                     type="number"
                     value={genForm.soundLevelDb || ''}
@@ -1183,7 +1208,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Conso L/h</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Fuel Usage L/h</label>
                   <input
                     type="number"
                     step="0.1"
@@ -1193,7 +1218,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Autonomie (h)</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Autonomy (hrs)</label>
                   <input
                     type="number"
                     step="0.5"
@@ -1205,7 +1230,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">Motorisation &amp; Cylindrée</label>
+                <label className="block font-semibold text-gray-700 mb-1">Engine &amp; Displacement</label>
                 <input
                   type="text"
                   value={genForm.engine || ''}
@@ -1215,7 +1240,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">URL de l&apos;image</label>
+                <label className="block font-semibold text-gray-700 mb-1">Image URL</label>
                 <input
                   type="text"
                   value={genForm.imageUrl || ''}
@@ -1225,7 +1250,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">Description commerciale</label>
+                <label className="block font-semibold text-gray-700 mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={genForm.description || ''}
@@ -1240,13 +1265,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   onClick={() => setIsGeneratorModalOpen(false)}
                   className="px-4 py-2 border rounded-lg text-gray-600 hover:text-black"
                 >
-                  Annuler
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold"
                 >
-                  Sauvegarder
+                  Save Generator
                 </button>
               </div>
             </form>
@@ -1263,12 +1288,12 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
         >
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-gray-200">
             <h3 className="text-xl font-bold text-[#0D0D0D] mb-4">
-              {editingRentalUnit ? `Modifier ${editingRentalUnit.name}` : 'Ajouter une Unité de Location'}
+              {editingRentalUnit ? `Edit ${editingRentalUnit.name}` : 'Add Rental Unit'}
             </h3>
 
             <form onSubmit={handleSaveRentalUnit} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">Nom de l&apos;unité *</label>
+                <label className="block font-semibold text-gray-700 mb-1">Unit Name *</label>
                 <input
                   type="text"
                   required
@@ -1280,7 +1305,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Puissance kVA</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Capacity kVA</label>
                   <input
                     type="number"
                     value={rentForm.kva || ''}
@@ -1289,7 +1314,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Tarif Jour (TND) *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Daily Rate (TND) *</label>
                   <input
                     type="number"
                     required
@@ -1299,7 +1324,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-gray-700 mb-1">Tarif Semaine (TND) *</label>
+                  <label className="block font-semibold text-gray-700 mb-1">Weekly Rate (TND) *</label>
                   <input
                     type="number"
                     required
@@ -1311,7 +1336,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">Usage Idéal</label>
+                <label className="block font-semibold text-gray-700 mb-1">Ideal Usage</label>
                 <input
                   type="text"
                   value={rentForm.idealFor || ''}
@@ -1339,7 +1364,7 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   className="w-4 h-4 text-amber-500 rounded"
                 />
                 <label htmlFor="avail" className="font-semibold text-gray-800">
-                  Unité disponible immédiatement
+                  Unit available for immediate dispatch
                 </label>
               </div>
 
@@ -1349,13 +1374,13 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                   onClick={() => setIsRentalUnitModalOpen(false)}
                   className="px-4 py-2 border rounded-lg text-gray-600 hover:text-black"
                 >
-                  Annuler
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold"
                 >
-                  Sauvegarder
+                  Save Unit
                 </button>
               </div>
             </form>
@@ -1376,10 +1401,10 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
             </div>
             <div className="text-center space-y-2">
               <h3 className="text-lg font-bold text-gray-900">
-                Confirmer la suppression
+                Confirm Deletion
               </h3>
               <p className="text-xs text-gray-600">
-                Supprimer <strong>&quot;{deleteConfirmation.name}&quot;</strong> ? Cette action est irréversible.
+                Are you sure you want to delete <strong>&quot;{deleteConfirmation.name}&quot;</strong>? This action cannot be undone.
               </p>
             </div>
             <div className="flex items-center justify-center gap-3 pt-2">
@@ -1388,14 +1413,14 @@ export const AdminSection: React.FC<AdminSectionProps> = ({
                 onClick={() => setDeleteConfirmation(null)}
                 className="px-4 py-2 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={confirmDeletion}
                 className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow"
               >
-                Supprimer définitivement
+                Permanently Delete
               </button>
             </div>
           </div>

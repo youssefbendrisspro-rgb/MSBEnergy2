@@ -51,7 +51,7 @@ export const AdminPinModal: React.FC<AdminPinModalProps> = ({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-black rounded-lg"
-          aria-label="Fermer"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
@@ -61,12 +61,12 @@ export const AdminPinModal: React.FC<AdminPinModalProps> = ({
         </div>
 
         <div className="text-center space-y-1 mb-6">
-          <h3 className="text-xl font-bold text-[#0D0D0D]">Accès Espace Administrateur</h3>
+          <h3 className="text-xl font-bold text-[#0D0D0D]">Admin Portal Access</h3>
           <p className="text-xs text-gray-500">
-            Saisissez votre code PIN pour gérer le catalogue et les tickets.
+            Enter your PIN to manage the catalog, requests, and support tickets.
           </p>
           <div className="mt-2 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 py-1 px-2.5 rounded-lg inline-block">
-            Code démo : <strong>1234</strong>
+            Demo PIN: <strong>1234</strong>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export const AdminPinModal: React.FC<AdminPinModalProps> = ({
               ref={inputRef}
               type="password"
               maxLength={8}
-              placeholder="PIN à 4 chiffres"
+              placeholder="4-digit PIN"
               value={pin}
               onChange={(e) => {
                 setPin(e.target.value);
@@ -91,7 +91,7 @@ export const AdminPinModal: React.FC<AdminPinModalProps> = ({
             {error && (
               <div className="flex items-center justify-center gap-1.5 text-red-600 text-xs font-semibold mt-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>PIN incorrect. Veuillez réessayer.</span>
+                <span>Incorrect PIN. Please try again.</span>
               </div>
             )}
           </div>
@@ -102,13 +102,13 @@ export const AdminPinModal: React.FC<AdminPinModalProps> = ({
               onClick={onClose}
               className="flex-1 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl text-xs font-semibold"
             >
-              Annuler
+              Cancel
             </button>
             <button
               type="submit"
               className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
             >
-              Déverrouiller
+              Unlock Portal
             </button>
           </div>
         </form>

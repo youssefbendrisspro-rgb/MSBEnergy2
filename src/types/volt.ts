@@ -1,11 +1,31 @@
-export type HabitationType = 'Villa' | 'Maison individuelle' | 'Duplex' | 'Petit commerce' | 'Autre';
+export type HabitationType =
+  | 'Villa'
+  | 'Detached House'
+  | 'Duplex'
+  | 'Small Business'
+  | 'Other'
+  | 'Maison individuelle'
+  | 'Petit commerce'
+  | 'Autre';
 
-export type GeneratorAvailability = 'En stock' | 'Sur commande (48h)' | 'Rupture temporaire';
+export type GeneratorAvailability =
+  | 'In Stock'
+  | 'On Order (48h)'
+  | 'Temporarily Out of Stock'
+  | 'En stock'
+  | 'Sur commande (48h)'
+  | 'Rupture temporaire';
 
 export interface Generator {
   id: string;
   name: string;
-  category: 'Domestique Compact' | 'Résidentiel Villa' | 'Grand Domaine & Duplex';
+  category:
+    | 'Compact Home'
+    | 'Residential Villa'
+    | 'Estate & Large Duplex'
+    | 'Domestique Compact'
+    | 'Résidentiel Villa'
+    | 'Grand Domaine & Duplex';
   kva: number;
   kw: number;
   engine: string;
@@ -16,8 +36,12 @@ export interface Generator {
   soundLevelDb: number; // e.g. 62 dB(A) @ 7m
   dimensions: string; // e.g. 960 x 560 x 780 mm
   weightKg: number;
-  atsIncluded: boolean; // Inverseur automatique de source (ATS)
-  voltage: '230V Monophasé' | '230V / 400V Triphasé';
+  atsIncluded: boolean; // Automatic Transfer Switch (ATS)
+  voltage:
+    | '230V Single-Phase'
+    | '230V / 400V Three-Phase'
+    | '230V Monophasé'
+    | '230V / 400V Triphasé';
   warrantyYears: number;
   priceTnd: number;
   availability: GeneratorAvailability;
@@ -40,7 +64,17 @@ export interface RentalUnit {
   imageUrl: string;
 }
 
-export type PurchaseStatus = 'En attente' | 'Contacté' | 'Confirmé' | 'Terminé' | 'Rejeté';
+export type PurchaseStatus =
+  | 'Pending'
+  | 'Contacted'
+  | 'Confirmed'
+  | 'Completed'
+  | 'Rejected'
+  | 'En attente'
+  | 'Contacté'
+  | 'Confirmé'
+  | 'Terminé'
+  | 'Rejeté';
 
 export interface PurchaseRequest {
   id: string; // VP-[timestamp]
@@ -58,7 +92,17 @@ export interface PurchaseRequest {
   status: PurchaseStatus;
 }
 
-export type RentalStatus = 'En attente' | 'Confirmé' | 'Actif' | 'Terminé' | 'Rejeté';
+export type RentalStatus =
+  | 'Pending'
+  | 'Confirmed'
+  | 'Active'
+  | 'Completed'
+  | 'Rejected'
+  | 'En attente'
+  | 'Confirmé'
+  | 'Actif'
+  | 'Terminé'
+  | 'Rejeté';
 
 export interface RentalRequest {
   id: string; // VR-[timestamp]
@@ -80,8 +124,25 @@ export interface RentalRequest {
   status: RentalStatus;
 }
 
-export type TicketUrgency = 'Normal' | 'Urgent' | 'Urgence';
-export type TicketStatus = 'Ouvert' | 'Assigné' | 'En cours' | 'Résolu' | 'Fermé';
+export type TicketUrgency =
+  | 'Standard'
+  | 'High'
+  | 'Emergency'
+  | 'Normal'
+  | 'Urgent'
+  | 'Urgence';
+
+export type TicketStatus =
+  | 'Open'
+  | 'Assigned'
+  | 'In Progress'
+  | 'Resolved'
+  | 'Closed'
+  | 'Ouvert'
+  | 'Assigné'
+  | 'En cours'
+  | 'Résolu'
+  | 'Fermé';
 
 export interface TicketNote {
   id: string;
@@ -97,7 +158,21 @@ export interface SupportTicket {
   clientEmail: string;
   generatorModel: string;
   address: string;
-  problemCategory: 'Panne de démarrage' | 'Inverseur ATS défaillant' | 'Fuite carburant ou huile' | 'Surchauffe / Alarme' | 'Bruit anormal' | 'Entretien & Révision' | 'Autre';
+  problemCategory:
+    | 'Starting Failure'
+    | 'ATS Transfer Switch Issue'
+    | 'Fuel or Oil Leak'
+    | 'Overheating / Alarm'
+    | 'Abnormal Noise'
+    | 'Maintenance & Service'
+    | 'Other'
+    | 'Panne de démarrage'
+    | 'Inverseur ATS défaillant'
+    | 'Fuite carburant ou huile'
+    | 'Surchauffe / Alarme'
+    | 'Bruit anormal'
+    | 'Entretien & Révision'
+    | 'Autre';
   description: string;
   urgency: TicketUrgency;
   photoBase64?: string;

@@ -50,21 +50,21 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-semibold">
                 <Zap className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span>Spécialiste Groupes Diesel Résidentiels &amp; Domestiques</span>
+                <span>Specialist in Residential &amp; Domestic Diesel Generators</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                Une énergie fiable.{' '}
+                Reliable power.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">
-                  Quand vous en avez besoin.
+                  When you need it most.
                 </span>
               </h1>
 
               <p className="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
-                Face aux coupures et délestages récurrents de la STEG dans le Grand Tunis,
-                VOLT protège votre villa, maison individuelle ou duplex avec des groupes électrogènes
-                diesel insonorisés de <strong>7 à 28 kVA</strong>.
-                Basculement automatique par inverseur ATS en moins de 8 secondes.
+                Facing recurring STEG grid outages and load-shedding across Greater Tunis,
+                VOLT safeguards your villa, private residence, or duplex with ultra-silent
+                diesel backup generators from <strong>7 to 28 kVA</strong>.
+                Automatic transfer switch (ATS) takeover in under 8 seconds.
               </p>
 
               {/* 3 Main Action Buttons */}
@@ -73,7 +73,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   onClick={() => onSelectTab('sales')}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-amber-500 text-black font-bold text-sm sm:text-base hover:bg-amber-400 transition-all shadow-md active:scale-97"
                 >
-                  <span>Acheter un générateur</span>
+                  <span>Buy a Generator</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
@@ -81,7 +81,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   onClick={() => onSelectTab('rental')}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base border border-white/20 transition-all active:scale-97"
                 >
-                  <span>Calculer une location</span>
+                  <span>Calculate Rental Rate</span>
                 </button>
 
                 <button
@@ -89,7 +89,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   className="inline-flex items-center gap-2 px-4 py-3 rounded-lg text-gray-300 hover:text-amber-400 font-medium text-sm sm:text-base transition-colors"
                 >
                   <Wrench className="w-4 h-4 text-amber-400" />
-                  <span>Dépannage d&apos;urgence</span>
+                  <span>Emergency Breakdown</span>
                 </button>
               </div>
 
@@ -97,15 +97,15 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               <div className="pt-4 border-t border-gray-800 grid grid-cols-3 gap-4 text-left">
                 <div>
                   <div className="text-2xl font-bold text-amber-400">&lt; 8 sec</div>
-                  <div className="text-xs text-gray-400">Relais automatique ATS</div>
+                  <div className="text-xs text-gray-400">Automatic ATS Transfer</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-amber-400">58 à 64 dB</div>
-                  <div className="text-xs text-gray-400">Silence résidentiel</div>
+                  <div className="text-2xl font-bold text-amber-400">58 to 64 dB</div>
+                  <div className="text-xs text-gray-400">Residential Silence</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-amber-400">&lt; 4h</div>
-                  <div className="text-xs text-gray-400">Intervention Grand Tunis</div>
+                  <div className="text-xs text-gray-400">Greater Tunis Response</div>
                 </div>
               </div>
             </div>
@@ -115,7 +115,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900 aspect-4/3 sm:aspect-16/10 lg:aspect-4/3 group">
                 <img
                   src={HERO_IMAGE_URL}
-                  alt="Installation d'un groupe électrogène diesel domestique silencieux VOLT dans une villa à Tunis"
+                  alt="VOLT silent residential diesel generator installation in a villa in Tunis"
                   className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
                   referrerPolicy="no-referrer"
                 />
@@ -124,14 +124,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs uppercase tracking-wider text-amber-400 font-semibold">
-                        Installation résidentielle certifiée
+                        Certified Residential Installation
                       </p>
                       <p className="text-sm font-bold text-white">
-                        VOLT VillaPower 15D · Cour pavée La Marsa
+                        VOLT VillaPower 15D · Paved Courtyard La Marsa
                       </p>
                     </div>
                     <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium">
-                      Silencieux 58 dB
+                      Silent 58 dB
                     </span>
                   </div>
                 </div>
@@ -151,12 +151,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Vente Certifiée</h3>
+            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Certified Sales</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Groupes diesel insonorisés neufs de 7 à 28 kVA avec garantie jusqu&apos;à 3 ans pièces et main d&apos;œuvre.
+              Brand-new soundproofed diesel generators from 7 to 28 kVA with up to 3 years parts and labor warranty.
             </p>
             <div className="mt-3 text-xs font-semibold text-amber-600 flex items-center gap-1">
-              Explorer le catalogue <ArrowRight className="w-3.5 h-3.5" />
+              Explore catalog <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
 
@@ -167,12 +167,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Truck className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Location Flexible</h3>
+            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Flexible Rental</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Formules jour ou semaine avec tarification dégressive. Idéal pour réceptions ou dépannage temporaire.
+              Daily and weekly rates with automatic volume discounts. Ideal for events or temporary backup.
             </p>
             <div className="mt-3 text-xs font-semibold text-amber-600 flex items-center gap-1">
-              Simulateur de devis <ArrowRight className="w-3.5 h-3.5" />
+              Rate simulator <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
 
@@ -180,12 +180,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Zap className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Inverseur ATS Inclus</h3>
+            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Automatic ATS Included</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Raccordement propre à votre coffret principal. Bascule automatique sans coupure perceptible.
+              Clean integration into your main distribution panel. Instant automatic takeover without power loss.
             </p>
             <div className="mt-3 text-xs text-gray-500 font-medium">
-              Normes sécurité NFC 15-100
+              NFC 15-100 Safety Compliance
             </div>
           </div>
 
@@ -196,12 +196,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-lg bg-red-50 text-red-600 flex items-center justify-center mb-4">
               <Wrench className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Dépannage &amp; Urgence</h3>
+            <h3 className="font-bold text-[#0D0D0D] text-lg mb-1">Emergency &amp; Repair</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Astreinte technique 24/7 sur le Grand Tunis. Déplacement d&apos;urgence en moins de 2 à 4h.
+              24/7 on-call technical team across Greater Tunis. Emergency on-site arrival in under 2 to 4 hours.
             </p>
             <div className="mt-3 text-xs font-semibold text-red-600 flex items-center gap-1">
-              Ouvrir un ticket d&apos;urgence <ArrowRight className="w-3.5 h-3.5" />
+              Open emergency ticket <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
         </div>
@@ -211,14 +211,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="text-xs uppercase font-bold tracking-wider text-amber-600">
-            Conçu pour l&apos;habitat individuel
+            Engineered for Residential Living
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0D0D0D] mt-2">
-            Pourquoi choisir un groupe diesel domestique VOLT ?
+            Why Choose a VOLT Residential Diesel Generator?
           </h2>
           <p className="text-gray-600 mt-3 text-sm sm:text-base">
-            Les groupes électrogènes de chantier ou industriels sont trop bruyants et inadaptés aux lotissements.
-            Nos modèles domestiques sont pensés pour cohabiter paisiblement avec votre voisinage.
+            Industrial and construction site generators are excessively loud and ill-suited for residential neighborhoods.
+            Our domestic models are specifically engineered for whisper-quiet coexistence with your surroundings.
           </p>
         </div>
 
@@ -227,20 +227,20 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xl">
               <Clock className="w-6 h-6 text-amber-700" />
             </div>
-            <h3 className="text-xl font-bold text-[#0D0D0D]">Intervention Rapide (&lt; 4h)</h3>
+            <h3 className="text-xl font-bold text-[#0D0D0D]">Rapid On-Site Response (&lt; 4h)</h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Nos équipes d&apos;électromécaniciens patrouillent quotidiennement sur le Grand Tunis :
-              La Marsa, Carthage, Gammarth, La Soukra, Ennasr, Menzah, Ariana et banlieue sud.
-              Livraison de carburant d&apos;urgence disponible.
+              Our electromechanical service teams operate daily across Greater Tunis:
+              La Marsa, Carthage, Gammarth, La Soukra, Ennasr, Menzah, Ariana, and southern suburbs.
+              Emergency fuel delivery service available on call.
             </p>
             <ul className="text-xs text-gray-500 space-y-2 pt-2 border-t border-gray-100">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Délai d&apos;astreinte contractuel garanti
+                Guaranteed contractual emergency response window
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Véhicules d&apos;intervention équipés de pièces détachées
+                Service vans fully stocked with genuine spare parts
               </li>
             </ul>
           </div>
@@ -249,19 +249,19 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xl">
               <Volume2 className="w-6 h-6 text-amber-700" />
             </div>
-            <h3 className="text-xl font-bold text-[#0D0D0D]">Insonorisation Résidentielle</h3>
+            <h3 className="text-xl font-bold text-[#0D0D0D]">Residential Soundproofing</h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Canopy acoustique double épaisseur, mousses ignifuges et silencieux d&apos;échappement à chicane.
-              Nos générateurs n&apos;émettent que 58 à 64 dB(A), soit le bruit d&apos;une conversation normale.
+              Double-wall acoustic enclosure, fire-retardant soundproofing foam, and multi-chamber baffle exhaust muffler.
+              Our units emit only 58 to 64 dB(A)—comparable to a calm household conversation.
             </p>
             <ul className="text-xs text-gray-500 space-y-2 pt-2 border-t border-gray-100">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Installation discrète en jardin ou cour latérale
+                Discreet installation in gardens or side courtyards
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Vibration amortie par silentblocs renforcés
+                Vibrations absorbed by reinforced anti-vibration mounts
               </li>
             </ul>
           </div>
@@ -270,19 +270,19 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xl">
               <Shield className="w-6 h-6 text-amber-700" />
             </div>
-            <h3 className="text-xl font-bold text-[#0D0D0D]">Service Clé en Main</h3>
+            <h3 className="text-xl font-bold text-[#0D0D0D]">Turnkey Service</h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Nous gérons l&apos;ensemble du projet : visite technique préalable, dépose sur socle anti-vibratile,
-              câblage cuivre avec protection différentielle, premier plein de Gasoil 50 et formation à l&apos;usage.
+              We handle every step: pre-installation technical inspection, placement on anti-vibration foundation pads,
+              copper cabling with differential circuit breakers, initial tank fill with Gasoil 50, and full user handover.
             </p>
             <ul className="text-xs text-gray-500 space-y-2 pt-2 border-t border-gray-100">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Test de bascule automatique en conditions réelles
+                Real-time automatic transfer switch load test
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Contrat d&apos;entretien périodique disponible
+                Periodic maintenance and servicing contracts available
               </li>
             </ul>
           </div>
@@ -294,20 +294,20 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <span className="text-xs uppercase font-bold tracking-wider text-amber-600">
-              Notre Gamme Domestique
+              Our Residential Range
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0D0D0D] mt-1">
-              Générateurs diesel pour villas et maisons individuelles
+              Diesel Generators for Villas &amp; Private Residences
             </h2>
             <p className="text-sm text-gray-600 mt-1">
-              Des modèles diesel ultra-réalistes, économiques à l&apos;usage et insonorisés.
+              Fuel-efficient, whisper-quiet diesel models engineered for long-term home reliability.
             </p>
           </div>
           <button
             onClick={() => onSelectTab('sales')}
             className="inline-flex items-center gap-1 text-sm font-bold text-amber-600 hover:text-amber-700 transition-colors"
           >
-            Voir tous les modèles ({generators.length}) <ArrowRight className="w-4 h-4" />
+            View all models ({generators.length}) <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -349,20 +349,20 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                   {/* Technical quick specs */}
                   <div className="grid grid-cols-2 gap-2 mt-4 py-3 border-y border-gray-100 text-xs">
                     <div>
-                      <span className="text-gray-400 block">Niveau sonore</span>
+                      <span className="text-gray-400 block">Sound Level</span>
                       <span className="font-semibold text-gray-800">{gen.soundLevelDb} dB(A) @ 7m</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block">Autonomie</span>
-                      <span className="font-semibold text-gray-800">{gen.autonomyHours} h</span>
+                      <span className="text-gray-400 block">Autonomy</span>
+                      <span className="font-semibold text-gray-800">{gen.autonomyHours} hrs</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block">Consommation</span>
+                      <span className="text-gray-400 block">Fuel Usage</span>
                       <span className="font-semibold text-gray-800">{gen.consumptionLitersPerHour} L/h</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block">Inverseur ATS</span>
-                      <span className="font-semibold text-emerald-600">Inclus &amp; Câblé</span>
+                      <span className="text-gray-400 block">ATS Switch</span>
+                      <span className="font-semibold text-emerald-600">Included &amp; Wired</span>
                     </div>
                   </div>
                 </div>
@@ -370,13 +370,13 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                 <div>
                   <div className="flex items-baseline justify-between mb-4">
                     <div>
-                      <span className="text-xs text-gray-400">Prix public TTC</span>
+                      <span className="text-xs text-gray-400">Retail price (incl. VAT)</span>
                       <div className="text-2xl font-black text-[#0D0D0D]">
-                        {gen.priceTnd.toLocaleString('fr-TN')} <span className="text-sm font-semibold text-gray-500">TND</span>
+                        {gen.priceTnd.toLocaleString('en-US')} <span className="text-sm font-semibold text-gray-500">TND</span>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500">
-                      Garantie {gen.warrantyYears} ans
+                      {gen.warrantyYears}-Year Warranty
                     </span>
                   </div>
 
@@ -385,13 +385,13 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
                       onClick={() => onOpenDetails(gen)}
                       className="px-3 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg text-center transition-colors"
                     >
-                      Fiche technique
+                      Specifications
                     </button>
                     <button
                       onClick={() => onOpenPurchase(gen)}
                       className="px-3 py-2 text-xs font-bold text-white bg-amber-500 hover:bg-amber-600 rounded-lg text-center transition-colors shadow-sm active:scale-97"
                     >
-                      Demander achat
+                      Request to Buy
                     </button>
                   </div>
                 </div>
@@ -407,14 +407,14 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
           <div className="space-y-2 text-center md:text-left">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/20 text-white text-xs font-semibold">
               <Flame className="w-3.5 h-3.5 text-amber-200" />
-              <span>Coupure de courant en cours sur votre secteur ?</span>
+              <span>Experiencing a power outage in your area right now?</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-black">
-              Besoin immédiat d&apos;un groupe de secours ?
+              Need an Immediate Emergency Backup Generator?
             </h3>
             <p className="text-black/80 text-sm max-w-xl">
-              Notre équipe d&apos;astreinte est mobilisable 24h/24 pour une livraison express ou un dépannage
-              d&apos;urgence sur l&apos;ensemble du Grand Tunis.
+              Our rapid-response emergency team is available 24/7 for express delivery or on-site repair
+              across all sectors of Greater Tunis.
             </p>
           </div>
 
@@ -424,13 +424,13 @@ export const HomeSection: React.FC<HomeSectionProps> = ({
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-black text-white hover:bg-gray-900 font-bold text-sm shadow-md transition-all text-center"
             >
               <PhoneCall className="w-4 h-4 text-amber-400" />
-              <span>Appeler le +216 71 888 999</span>
+              <span>Call +216 71 888 999</span>
             </a>
             <button
               onClick={() => onSelectTab('rental')}
               className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white text-black hover:bg-amber-50 font-bold text-sm shadow-md transition-all text-center"
             >
-              <span>Louer une unité mobile</span>
+              <span>Rent a Mobile Unit</span>
             </button>
           </div>
         </div>

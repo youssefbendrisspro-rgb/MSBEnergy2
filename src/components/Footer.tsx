@@ -26,12 +26,12 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
             </div>
 
             <p className="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-sm">
-              VOLT est le spécialiste tunisien de la sécurisation énergétique pour résidences, villas et habitats individuels face aux coupures de la STEG. Vente, location, installation d&apos;inverseurs ATS et dépannage d&apos;urgence 24/7.
+              VOLT is the leading Tunisian backup power specialist for residences, villas, and single-family homes during STEG grid outages. Sales, rentals, ATS switchboard installation, and 24/7 emergency repair.
             </p>
 
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold pt-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>Conformité NFC 15-100 &amp; Certification CE</span>
+              <span>NFC 15-100 Electrical Compliance &amp; CE Certified</span>
             </div>
           </div>
 
@@ -44,7 +44,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
                   onClick={() => onSelectTab('home')}
                   className="hover:text-amber-400 transition-colors"
                 >
-                  Accueil &amp; Présentation
+                  Home &amp; Overview
                 </button>
               </li>
               <li>
@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
                   onClick={() => onSelectTab('sales')}
                   className="hover:text-amber-400 transition-colors"
                 >
-                  Catalogue Vente (7 à 28 kVA)
+                  Sales Catalog (7 to 28 kVA)
                 </button>
               </li>
               <li>
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
                   onClick={() => onSelectTab('rental')}
                   className="hover:text-amber-400 transition-colors"
                 >
-                  Location &amp; Simulateur de Devis
+                  Rental &amp; Rate Simulator
                 </button>
               </li>
               <li>
@@ -68,7 +68,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
                   onClick={() => onSelectTab('support')}
                   className="hover:text-amber-400 transition-colors"
                 >
-                  Déclaration de Panne &amp; Astreinte
+                  Incident Report &amp; Support
                 </button>
               </li>
             </ul>
@@ -76,22 +76,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
 
           {/* Col 3: Secteurs desservis */}
           <div className="space-y-3 text-xs">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs">Zone d&apos;Intervention (&lt; 4h)</h4>
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs">Service Area (&lt; 4h Response)</h4>
             <p className="text-gray-400 text-[11px] leading-relaxed">
-              Grand Tunis intégral : La Marsa, Gammarth, Carthage, Sidi Bou Saïd, La Soukra, Les Berges du Lac 1 &amp; 2, Ennasr 1 &amp; 2, El Menzah, El Manar, Ariana Ville, Ben Arous, Mégrine, Radès, Hammam Lif.
+              All Greater Tunis: La Marsa, Gammarth, Carthage, Sidi Bou Said, La Soukra, Les Berges du Lac 1 &amp; 2, Ennasr 1 &amp; 2, El Menzah, El Manar, Ariana, Ben Arous, Megrine, Rades, Hammam Lif.
             </p>
             <div className="text-[11px] text-amber-400 font-medium">
-              Véhicules d&apos;astreinte pré-positionnés
+              Pre-positioned emergency service vans
             </div>
           </div>
 
           {/* Col 4: Contact direct */}
           <div className="space-y-3 text-xs">
-            <h4 className="font-bold text-white uppercase tracking-wider text-xs">Urgence &amp; Siège</h4>
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs">Emergency &amp; Headquarters</h4>
             <div className="space-y-2 text-gray-300">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <span>Zone Industrielle Charguia II &amp; Agence La Soukra, Tunis</span>
+                <span>Charguia II Industrial Zone &amp; La Soukra Branch, Tunis</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-500 shrink-0" />
@@ -110,17 +110,17 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <div>
-            &copy; 2026 VOLT Tunisie. Tous droits réservés. Groupes Électrogènes Diesel Domestiques.
+            &copy; 2026 VOLT Tunisia. All rights reserved. Residential Silent Diesel Generators.
           </div>
           <div className="flex items-center gap-4">
-            <span>Intervention d&apos;urgence coupures STEG</span>
+            <span>Emergency response for STEG power outages</span>
             <span>·</span>
             <button
               onClick={onOpenAdmin}
               className="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-1 font-medium"
             >
               <Lock className="w-3 h-3" />
-              <span>{isAdmin ? 'Espace Admin Déjà Ouvert' : 'Accès Administration'}</span>
+              <span>{isAdmin ? 'Admin Mode Active' : 'Admin Portal Access'}</span>
             </button>
           </div>
         </div>
@@ -130,8 +130,8 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenAdmin, isAdmi
       <button
         onClick={onOpenAdmin}
         className="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-[#0D0D0D] text-amber-400 hover:text-white hover:bg-amber-500 shadow-2xl border border-amber-500/40 transition-all hover:scale-110 active:scale-95 group focus:outline-none focus:ring-2 focus:ring-amber-500"
-        title="Administration VOLT (PIN 1234)"
-        aria-label="Accès Administration VOLT"
+        title="VOLT Administration (PIN 1234)"
+        aria-label="VOLT Administration Access"
       >
         <Lock className="w-5 h-5 group-hover:rotate-12 transition-transform" />
       </button>
